@@ -1,0 +1,55 @@
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .container {
+    width: 1300px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // padding: 0 20px;
+    // background-color: aqua;
+
+    .logoContainer {
+      font-size: 16x;
+      color: var(--templateColor);
+    }
+
+    .navCenter {
+      display: flex;
+      gap: 50px;
+
+      .fav {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .heart {
+          color: var(--templateColor);
+        }
+      }
+    }
+
+    .navEnd {
+      display: flex;
+      gap: 10px;
+
+      button {
+        color: white;
+        background-color: var(--templateColor);
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+
+        a {
+          display: inline-block;
+          padding: 8px 12px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
