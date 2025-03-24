@@ -2,6 +2,7 @@
 
 :root {
   --bg: #a8d5ba;
+  --templateColor: #ff511c;
 }
 
 * {
@@ -9,4 +10,12 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", serif;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+li {
+  list-style: none;
 }
