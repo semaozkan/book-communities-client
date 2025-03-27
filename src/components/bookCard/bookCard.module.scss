@@ -1,0 +1,91 @@
+.card {
+  width: 176px;
+  height: 260px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgb(232, 232, 232);
+  border-radius: 12px;
+  background-color: white;
+
+  .imgContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    .bookImg {
+      display: flex;
+      flex-direction: column;
+      //   justify-content: flex-start;
+      align-items: center;
+      width: 160px;
+      height: 160px;
+      background-color: #dcd5cd;
+      border-radius: 6px;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        color: transparent;
+      }
+    }
+  }
+
+  .info {
+    line-height: 16px;
+
+    display: flex;
+    flex-direction: column;
+
+    .bookName {
+      font-size: 13px;
+      font-weight: 600;
+      color: #101010;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .author {
+      font-size: 13px;
+      color: #5c5c5c;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .iconContainer {
+    margin-top: 12px;
+    height: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .heart {
+      width: 18px;
+      height: 18px;
+      color: var(--templateColor);
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    .headphone {
+      width: 16px;
+      height: 16px;
+      color: #5c5c5c;
+    }
+  }
+}
