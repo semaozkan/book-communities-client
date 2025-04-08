@@ -1,0 +1,32 @@
+.slider {
+  width: 100%;
+  .fullSlider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .arrow {
+      color: black;
+      cursor: pointer;
+      img {
+        width: 80px;
+
+        &.right {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    .bookViewport {
+      overflow: hidden;
+      width: calc(5 * 206px);
+
+      .bookContainer {
+        display: flex;
+        gap: 30px;
+        transition: transform 0.5s ease-in-out;
+        width: fit-content;
+      }
+    }
+  }
+}
