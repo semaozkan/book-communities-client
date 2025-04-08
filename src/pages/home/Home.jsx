@@ -1,6 +1,9 @@
 // import BookCard from "../../components/bookCard/BookCard";
 import Slider from "../../components/slider/Slider";
 import styles from "./home.module.scss";
+import { RiCompassDiscoverLine } from "react-icons/ri";
+import { FaHeadphonesAlt } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 
 const Home = () => {
   return (
@@ -20,7 +23,42 @@ const Home = () => {
           <Slider />
         </div>
       </div>
-      <div className={styles.thirdSection}></div>
+      <div className={styles.thirdSection}>
+        <div className={styles.imgContainer}>
+          <img src="/images/books2.png" alt="books" />
+        </div>
+        <div className={styles.textContainer}>
+          <div className={styles.title}>
+            En Sevdiğiniz Kitaplar <br />
+            <span>Burada!</span>
+          </div>
+          <div className={styles.text}>
+            <br />
+            Bibliyofil’de favori kitaplarını keşfet, okuma arkadaşları edin,
+            sesli kitapları dinle ve kitaplar üzerine sohbet et. Okumak sadece
+            bireysel bir yolculuk değil — birlikte daha keyifli!
+          </div>
+          <div className={styles.icons}>
+            <div className={styles.icon}>
+              <RiCompassDiscoverLine />
+              <span>Keşfet</span>
+            </div>
+
+            <div className={styles.icon}>
+              <FaHeadphonesAlt />
+              <span>Dinle</span>
+            </div>
+
+            <div className={styles.icon}>
+              <FaUsers />
+              <span>Katıl</span>
+            </div>
+          </div>
+          <a href="">
+            <button>Daha fazlasını keşfedin</button>
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
