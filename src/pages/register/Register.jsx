@@ -59,21 +59,21 @@ const Register = () => {
             </div>
 
             <div className={styles.formRow}>
-              <label htmlFor="password">Şifre:</label>
+              <label htmlFor="password">Parola:</label>
               <input
                 type="password"
                 name="password"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Lütfen şifrenizi girin"
+                placeholder="Lütfen parolanızı girin"
                 required
               />
             </div>
 
             <button type="submit">Kayıt Ol</button>
             <p className={styles.loginText}>
-              Zaten bir hesabın var mı?,{" "}
+              Zaten bir hesabın var mı?{" "}
               <Link to="/login" className={styles.loginLink}>
                 Giriş Yap
               </Link>

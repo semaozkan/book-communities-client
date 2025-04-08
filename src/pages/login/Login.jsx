@@ -32,12 +32,12 @@ const Login = () => {
             </div>
 
             <div className={styles.formRow}>
-              <label htmlFor="password">Şifre:</label>
+              <label htmlFor="password">Parola:</label>
               <input
                 type="password"
                 name="password"
                 id="password"
-                placeholder="Lütfen şifrenizi girin"
+                placeholder="Lütfen parolanızı girin"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -46,7 +46,7 @@ const Login = () => {
 
             <button type="submit">Giriş Yap</button>
             <p className={styles.registerText}>
-              Hesabın yok mu?,{" "}
+              Hesabınız yok mu?{" "}
               <Link to="/register" className={styles.registerLink}>
                 Kayıt Ol
               </Link>
