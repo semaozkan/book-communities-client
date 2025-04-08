@@ -4,7 +4,7 @@ import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeadphonesAlt } from "react-icons/fa";
 
-const BookCard = () => {
+const BookCard = ({ book }) => {
   const [liked, setLiked] = useState(false);
 
   const toggleLike = () => {
@@ -15,13 +15,13 @@ const BookCard = () => {
     <div className={styles.card}>
       <div className={styles.imgContainer}>
         <div className={styles.bookImg}>
-          <img src="/images/kucuk_prens.jpg" alt="kucuk_prens" />
+          <img src={book?.image} alt="kucuk_prens" />
         </div>
       </div>
 
       <div className={styles.info}>
-        <span className={styles.bookName}>Küçük Prens</span>
-        <span className={styles.author}>Antoine de Saint-Exupéry</span>
+        <span className={styles.bookName}>{book?.title}</span>
+        <span className={styles.author}>{book?.author}</span>
       </div>
 
       <div className={styles.iconContainer}>
