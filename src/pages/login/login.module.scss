@@ -17,7 +17,6 @@
   .formContainer {
     width: 40%;
     height: 100%;
-    // background-color: bisque;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,32 +41,37 @@
         .formRow {
           display: flex;
           flex-direction: column;
-          margin-bottom: 15px;
-          gap: 5px;
+          margin-bottom: 10px;
+          gap: 4px;
 
           label {
-            font-size: 18px;
+            font-size: 16px;
           }
 
           input {
+            width: 90%;
             padding: 12px;
-            border: 1px solid gray;
+            border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #e8f0fe;
           }
         }
         button {
-          width: 100%;
-          padding: 10px;
-          margin: 5px 0 10px 0;
-          background-color: var(--bg);
-          border-radius: 5px;
+          width: 90%;
+          padding: 8px;
+          margin: 5px 0 16px 0;
+          color: white;
+          background-color: var(--templateColor);
+          border-radius: 20px;
           border: none;
+          font-size: 16px;
+          cursor: pointer;
         }
 
         .registerText {
           .registerLink {
             text-decoration: none;
-            color: darkred;
+            color: var(--templateColor);
           }
         }
       }
