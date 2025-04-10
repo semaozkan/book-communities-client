@@ -12,9 +12,18 @@ const Home = () => {
         <div className={styles.imageContainer}>
           <img src="/images/home.jpg" alt="" />
         </div>
-        <div className={styles.searchBar}>
-          <input type="text" placeholder="Kitap ara" />
-          <button>Ara</button>
+        <div className={styles.searchBarContainer}>
+          <div className={styles.title}>Bibliyofil Dünyasına Hoş Geldiniz!</div>
+          <div className={styles.text}>
+            Kitap okumayı sevenleri bir araya getiren, paylaşmayı seven bir
+            topluluğun parçası olmaya hazır mısınız? Okuma deneyiminizi
+            zenginleştirecek etkinlikler, öneriler ve topluluklar sizi bekliyor.
+            Hadi, birlikte keşfedelim!
+          </div>
+          <div className={styles.searchBar}>
+            <input type="text" placeholder="Kitap ara" />
+            <button>Ara</button>
+          </div>
         </div>
       </div>
       <div className={styles.secondSection}>
