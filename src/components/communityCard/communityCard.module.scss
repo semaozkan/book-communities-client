@@ -1,0 +1,47 @@
+.container {
+  width: 550px;
+  height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  background-color: var(--bg);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  cursor: pointer;
+
+  .imgContainer {
+    width: 150px;
+    height: 150px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .infoContainer {
+    .name {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+  }
+
+  .joinButton {
+    button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      color: white;
+      background-color: var(--templateColor);
+      margin-left: 48px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
