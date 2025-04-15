@@ -35,8 +35,8 @@ const Slider = () => {
               }px)`,
             }}
           >
-            {dummyBooks.map((book) => (
-              <BookCard key={book.id} book={book} />
+            {dummyBooks.map((item) => (
+              <BookCard key={item.id} book={item} />
             ))}
           </div>
         </div>
