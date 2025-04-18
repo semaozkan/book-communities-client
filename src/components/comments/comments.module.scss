@@ -1,0 +1,264 @@
+.commentContainer {
+  padding: 30px 200px;
+  margin: 100px 0;
+
+  .titleContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+
+    h1 {
+      font-size: 26px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 12px 24px;
+      color: white;
+      background-color: var(--templateColor);
+      border: none;
+      border-radius: 32px;
+      cursor: pointer;
+    }
+  }
+
+  .ratingContainer {
+    display: flex;
+
+    .ratings {
+      flex: 1;
+
+      h4 {
+        margin-bottom: 32px;
+      }
+
+      .averageRating {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+
+        .imgContainer {
+          width: 144px;
+          height: 144px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            background-color: var(--bg2);
+          }
+        }
+
+        .starContainer {
+          .starContent {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+
+            h3 {
+              font-size: 26px;
+            }
+
+            .stars {
+              .star {
+                width: 24px;
+                height: 24px;
+              }
+            }
+          }
+          p {
+            color: rgb(92, 92, 92);
+          }
+        }
+      }
+    }
+
+    .commentsContent {
+      flex: 2;
+
+      h4 {
+        margin-bottom: 32px;
+      }
+
+      .comments {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+    }
+  }
+}
+
+.isCommentModalOpenContainer {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+
+  .isCommentModalOpen {
+    width: 480px;
+    // height: 600px;
+
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      padding: 14px 20px;
+      border-bottom: solid 1px #e8e8e8;
+
+      .title {
+      }
+      .close {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+
+        .closeIcon {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+
+    .content {
+      padding: 15px 20px;
+
+      .bookContainer {
+        display: flex;
+        align-items: center;
+        padding-bottom: 20px;
+        gap: 20px;
+        border-bottom: solid 1px #e8e8e8;
+
+        .bookImg {
+          width: 130px;
+          height: 130px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            background-color: var(--bg2);
+          }
+        }
+      }
+
+      .commentContent {
+        margin-top: 26px;
+
+        .rating {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 32px;
+
+          span {
+            font-size: 14px;
+          }
+
+          .starsContainer {
+            .star {
+              width: 24px;
+              height: 24px;
+              margin: 0 1px;
+              cursor: pointer;
+
+              &:hover {
+                color: #ffc100;
+                cursor: pointer;
+              }
+            }
+            .yellowStar {
+              color: #ffc100;
+              cursor: pointer;
+            }
+
+            .starIcon {
+              cursor: pointer;
+              color: #d8d8d8;
+            }
+          }
+        }
+
+        .comment {
+          margin-bottom: 20px;
+
+          span {
+            font-size: 13px;
+          }
+
+          .commentSide {
+            position: relative;
+
+            textarea {
+              resize: none;
+              transition: 0.3s linear;
+              width: 100%;
+              height: 100px;
+              padding: 10px;
+              margin-top: 6px;
+              border: solid 1px #e5e5e5;
+              border-radius: 6px;
+              background-color: #fbfbfb;
+
+              &:focus {
+                background-color: white;
+                outline: none;
+              }
+            }
+
+            .counter {
+              font-size: 10px;
+              position: absolute;
+              right: 3px;
+              bottom: -15px;
+              color: #999999;
+            }
+          }
+        }
+      }
+    }
+
+    .commentButton {
+      padding: 20px;
+
+      .button {
+        // width: 100%;
+        height: 38px;
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        // color: white;
+        // background-color: var(--templateColor);
+        transition: all 0.5s ease;
+      }
+
+      .enableButton {
+        color: white;
+        background-color: var(--templateColor);
+        cursor: pointer;
+      }
+
+      .disabled {
+        background-color: #ddd;
+        color: #666;
+        cursor: default;
+      }
+    }
+  }
+}
