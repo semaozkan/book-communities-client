@@ -1,0 +1,62 @@
+.comment {
+  padding: 20px 0;
+  border: 1px solid var(--bg2);
+  border-radius: 8px;
+  background-color: #fffbfa;
+
+  .userInfo {
+    display: flex;
+    margin: 0 20px 16px 20px;
+
+    .userImg {
+      //   background-color: var(--templateColor);
+
+      background-color: #ffa58ac4;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .userIcon {
+        width: 24px;
+        height: 24px;
+        color: var(--lighterColor);
+      }
+
+      img {
+      }
+    }
+
+    .info {
+      margin-left: 16px;
+
+      span {
+        display: inline-block;
+        margin-bottom: 6px;
+      }
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .stars {
+          .star {
+            width: 24px;
+            height: 24px;
+            color: #d8d8d8;
+          }
+        }
+        .date {
+          color: var(--lighterColor);
+        }
+      }
+    }
+  }
+
+  p {
+    margin: 0 20px;
+  }
+}
