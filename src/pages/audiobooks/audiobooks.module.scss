@@ -1,0 +1,47 @@
+.audiobooks {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .imgContainer {
+    width: 100%;
+    height: calc(65vh - 80px);
+    position: relative;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      //   filter: blur(2px);
+    }
+
+    svg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+    }
+
+    h1 {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 2;
+      //   transform: translate(50%, 50%);
+    }
+  }
+
+  .booksContainer {
+    width: 1400px;
+    // background-color: coral;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+  }
+}
