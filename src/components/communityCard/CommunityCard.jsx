@@ -1,8 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import styles from "./communityCard.module.scss";
 
 const CommunityCard = () => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/community`);
+  };
+
   return (
-    <div className={styles.container}>
+    <div onClick={handleCardClick} className={styles.container}>
       <div className={styles.imgContainer}>
         <img src="/images/pausiber_kitap_topluluğu.png" alt="" />
       </div>
