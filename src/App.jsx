@@ -8,11 +8,13 @@ import Audiobooks from "./pages/audiobooks/Audiobooks";
 import Communities from "./pages/communities/Communities";
 import BookDetail from "./pages/bookDetail/BookDetail";
 import SingleCommunity from "./pages/singleCommunity/SingleCommunity";
+import BookDonation from "./pages/bookDonation/BookDonation";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -21,6 +23,7 @@ function App() {
           <Route path="/communities" element={<Communities />} />
           <Route path="/book/:id" element={<BookDetail />} />
           <Route path="/community" element={<SingleCommunity />} />
+          <Route path="/bookDonation" element={<BookDonation />} />
         </Routes>
       </BrowserRouter>
     </>
