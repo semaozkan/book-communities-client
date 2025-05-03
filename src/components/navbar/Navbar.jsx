@@ -12,16 +12,20 @@ const Navbar = () => {
         </div>
         <div className={styles.navCenter}>
           <li>
-            <a href="">Sesli Kitaplar</a>
+            <a href="/audiobooks">Sesli Kitaplar</a>
           </li>
 
           <li>
-            <a href="">Kütüphanem</a>
+            <a href="/communities">Topluluklar</a>
+          </li>
+
+          <li>
+            <a href="/bookDonation">Kitap Bağışı</a>
           </li>
 
           <li className={styles.fav}>
             <FaHeart className={styles.heart} />
-            <a href="">Favorilerim</a>
+            <a href="/favorites">Favorilerim</a>
           </li>
         </div>
         <div className={styles.navEnd}>
