@@ -9,6 +9,9 @@ import Communities from "./pages/communities/Communities";
 import BookDetail from "./pages/bookDetail/BookDetail";
 import SingleCommunity from "./pages/singleCommunity/SingleCommunity";
 import BookDonation from "./pages/bookDonation/BookDonation";
+import SummaryDetail from "./pages/summaryDetail/SummaryDetail";
+import AddSummary from "./pages/addSummary/AddSummary";
+import Favorites from "./pages/favorites/Favorites";
 
 function App() {
   return (
@@ -21,9 +24,13 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/audiobooks" element={<Audiobooks />} />
           <Route path="/communities" element={<Communities />} />
-          <Route path="/book/:id" element={<BookDetail />} />
+          <Route path="/book/:bookId" element={<BookDetail />} />
           <Route path="/community" element={<SingleCommunity />} />
           <Route path="/bookDonation" element={<BookDonation />} />
+          <Route
+            path="/book/:bookId/summaries/:summaryId"
+            element={<SummaryDetail />}
+          />
         </Routes>
       </BrowserRouter>
     </>
