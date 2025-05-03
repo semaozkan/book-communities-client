@@ -1,0 +1,229 @@
+.messageModal {
+  width: 500px;
+  background-color: white;
+  box-shadow: 0px 0px 0px 1px rgb(140 140 140/0.2), 0px 4px 4px rgb(0 0 0/0.3);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+
+  // animation: fadeInModal 0.3s ease-out;
+  // transition: all 0.3s ease-in-out;
+
+  animation: slideUp 0.4s ease-out;
+  transition: all 0.3s ease;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 58px;
+    padding: 0 8px;
+    border-bottom: 1px solid rgb(140 140 140/0.2);
+
+    .receiverInfo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .imgContainer {
+        width: 42px;
+        height: 42px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+      .name {
+        font-size: 16px;
+        font-weight: 500;
+      }
+    }
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      .closeIcon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .messageSection {
+    height: 450px;
+    padding: 20px 8px 0 8px;
+
+    overflow-y: auto;
+    border-bottom: 2px solid rgb(140 140 140/0.2);
+
+    .messageCard {
+      &.newGroup {
+        margin-top: 24px;
+      }
+
+      &.sameGroup {
+        margin-top: 4px;
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      .userInfo {
+        // height: max-content;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+
+        display: flex;
+        .imgContainer {
+          width: 42px;
+          height: 42px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+          }
+        }
+
+        .user {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .name {
+            font-size: 14px;
+            font-weight: 500;
+          }
+
+          .time {
+            font-size: 12px;
+            color: #00000099;
+          }
+        }
+
+        .message {
+          font-size: 16px;
+        }
+      }
+
+      .messageContainer {
+        margin-left: 52px;
+
+        .message {
+          font-size: 16px;
+          margin-top: 4px;
+          padding-right: 24px;
+        }
+      }
+    }
+  }
+
+  .textAreaWrapper {
+    padding: 12px;
+    border-bottom: 1px solid rgb(140 140 140/0.2);
+
+    textarea {
+      resize: none;
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      background-color: #f4f2ee;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+
+    .left {
+      display: flex;
+      align-items: center;
+      margin-left: 12px;
+      // gap: 14px;
+
+      .footerIcon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+
+        &:hover {
+          background-color: rgb(140 140 140/0.1);
+        }
+      }
+    }
+
+    .right {
+      margin-right: 8px;
+
+      button {
+        padding: 3px 12px;
+        border-radius: 16px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+
+        &.active {
+          color: white;
+          background-color: var(--templateColor);
+          cursor: pointer;
+        }
+
+        &.disabled {
+          color: #a2a2a2;
+          background-color: #e8e8e8;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeInModal {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
