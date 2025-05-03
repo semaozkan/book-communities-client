@@ -1,0 +1,67 @@
+.cardContent {
+  background-color: var(--bg);
+  border-radius: 8px;
+  //   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  //   justify-content: space-between;
+  //   height: 230px;
+  width: 480px;
+  overflow: hidden;
+  cursor: pointer;
+
+  .title {
+    font-size: 17px;
+    color: #333;
+    margin-bottom: 12px;
+  }
+
+  .content {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.4;
+    flex-grow: 1;
+    margin-bottom: 2px;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+
+    max-height: calc(1.4em * 4);
+  }
+
+  .readMoreContainer {
+    display: flex;
+    justify-content: flex-end; // sağa hizalar, istersen center yap
+
+    button {
+      background-color: transparent;
+      border: none;
+      color: var(--templateColor);
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--templateColorHover);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .cardFooter {
+    font-size: 13px;
+    color: #888;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 12px;
+    flex-shrink: 0;
+  }
+}
