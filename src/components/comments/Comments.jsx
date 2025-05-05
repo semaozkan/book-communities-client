@@ -155,6 +155,9 @@ const Comments = () => {
                 className={`${styles.button} ${
                   commentButton ? styles.enableButton : styles.disabled
                 }`}
+                onClick={() => {
+                  setRating(false);
+                }}
               >
                 Yorum Yap
               </div>
