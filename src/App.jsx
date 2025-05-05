@@ -31,6 +31,7 @@ function App() {
             path="/book/:bookId/summaries/:summaryId"
             element={<SummaryDetail />}
           />
+          <Route path="/book/:bookId/summaries/add" element={<AddSummary />} />
         </Routes>
       </BrowserRouter>
     </>
