@@ -90,24 +90,35 @@ Küçük Prens yıllardır beklenen Cemal Süreya ve Tomris Uyar çevirisiyle Ca
 };
 
 const BookDetail = ({ book }) => {
+  const [activeTab, setActiveTab] = useState("comments");
+
+  const navigate = useNavigate();
+
+  const handleListenButtonClick = () => {
+    navigate(`/listen/${book.id}`);
+  };
 
   return (
     <div className={styles.bookDetail}>
       <div className={styles.bookInfo}>
         <div className={styles.imgContainer}>
           <div className={styles.image}>
+            <img src={bookData.img} alt="" />
           </div>
 
-          <a href="">
-            <button>Dinle</button>
+          <a href="listen/1">
+            <button onClick={handleListenButtonClick}>Dinle</button>
           </a>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.title}>
+            <h1>{bookData.title}</h1>
             <ul>
               <li>
+                Yazan <span>{bookData.author}</span>
               </li>
               <li>
+                Yayınevi <span>{bookData.publishingHouse}</span>
               </li>
             </ul>
           </div>

@@ -110,4 +110,39 @@
       }
     }
   }
+
+  .tabContainer {
+    margin-top: 60px;
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      gap: 20px;
+      padding-left: 180px;
+
+      button {
+        padding: 12px 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+
+        &.active {
+          color: var(--templateColor);
+          border-bottom-color: var(--templateColor);
+        }
+
+        &:hover {
+          color: var(--templateColor);
+        }
+      }
+    }
+
+    .tabContent {
+      margin-top: 20px;
+    }
+  }
 }
