@@ -1,0 +1,34 @@
+.summaries {
+  width: 100vw;
+  height: 100vh;
+
+  .summariesContainer {
+    padding: 30px 200px;
+
+    .titleContainer {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 50px;
+
+      h1 {
+        font-size: 26px;
+      }
+
+      button {
+        font-size: 16px;
+        padding: 12px 24px;
+        color: white;
+        background-color: var(--templateColor);
+        border: none;
+        border-radius: 32px;
+        cursor: pointer;
+      }
+    }
+
+    .summaryCardContainer {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+  }
+}
