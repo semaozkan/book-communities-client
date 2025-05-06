@@ -4,11 +4,10 @@ import styles from "./communities.module.scss";
 // import { FaUsers } from "react-icons/fa";
 // import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import { CiImageOn } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 
 const Communities = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef();
@@ -44,16 +43,15 @@ const Communities = () => {
         </svg>
 
         <h1>Topluluklar </h1>
-        <a href="">
-          <div
-            className={styles.addButton}
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            + Topluluk Oluştur{" "}
-          </div>
-        </a>
+      </div>
+
+      <div
+        className={styles.addButton}
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        + Topluluk Oluştur{" "}
       </div>
       <div className={styles.communityContainer}>
         <CommunityCard />
@@ -74,6 +72,7 @@ const Communities = () => {
               <div
                 onClick={() => {
                   setIsModalOpen(false);
+                  setSelectedImage(null);
                 }}
               >
                 <IoClose className={styles.closeButton} />
@@ -140,6 +139,7 @@ const Communities = () => {
               <button
                 onClick={() => {
                   setIsModalOpen(false);
+                  setSelectedImage(null);
                 }}
                 className={isFormValid ? styles.active : styles.disabled}
                 disabled={!isFormValid}
