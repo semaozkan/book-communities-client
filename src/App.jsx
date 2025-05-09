@@ -32,6 +32,7 @@ function App() {
             element={<SummaryDetail />}
           />
           <Route path="/book/:bookId/summaries/add" element={<AddSummary />} />
+          <Route path="/favorites" element={<Favorites />} />
         </Routes>
       </BrowserRouter>
     </>
