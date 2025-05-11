@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./communityCard.module.scss";
 
-const CommunityCard = () => {
+const CommunityCard = ({ community }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -11,17 +11,17 @@ const CommunityCard = () => {
   return (
     <div onClick={handleCardClick} className={styles.container}>
       <div className={styles.imgContainer}>
-        <img src="/images/pausiber_kitap_topluluğu.png" alt="" />
+        <img src={community.image} alt="" />
       </div>
 
       <div className={styles.infoContainer}>
-        <div className={styles.name}>Paüsiber Kitap Topluluğu</div>
-        <div className={styles.disc}>Katılımcı Sayısı: 10</div>
+        <div className={styles.name}>{community.name}</div>
+        <div className={styles.disc}>Katılımcı Sayısı: {community.members}</div>
       </div>
 
-      <div className={styles.joinButton}>
+      {/* <div className={styles.joinButton}>
         <button>Katıl</button>
-      </div>
+      </div> */}
     </div>
   );
 };
