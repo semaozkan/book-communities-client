@@ -11,11 +11,16 @@ const BookCard = ({
   showDelete = false,
   onToggleFavorite,
   onRemove,
+  onClick,
 }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/book/${book.id}`);
+    if (onClick) {
+      onClick(book); // Eğer dışarıdan onClick fonksiyonu gelmişse onu çalıştır
+    } else {
+      navigate(`/book/${book.id}`); // yoksa detay sayfasına git
+    }
   };
 
   const handleLikeClick = (e) => {
@@ -31,9 +36,13 @@ const BookCard = ({
   return (
     <div className={styles.card} onClick={handleCardClick}>
       {showDelete && (
-        <button className={styles.removeButton} onClick={handleRemoveClick}>
-          ✕
-        </button>
+        <>
+          <button className={styles.removeButton} onClick={handleRemoveClick}>
+            ✕
+          </button>
+
+          <FaHeadphonesAlt className={styles.headphoneIcon} />
+        </>
       )}
       <div
         className={`${styles.imgContainer} ${
@@ -41,7 +50,7 @@ const BookCard = ({
         }`}
       >
         <div className={styles.bookImg}>
-          <img src={book?.image} alt="kucuk_prens" />
+          <img src={book?.img} alt="kucuk_prens" />
         </div>
       </div>
 
