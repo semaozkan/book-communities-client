@@ -3,6 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: #eff9ff;
+  box-shadow: 0 2px 7px 0 rgb(0, 0, 0, 0.4);
 
   .container {
     width: 1400px;
@@ -40,8 +46,7 @@
     }
 
     .navEnd {
-      display: flex;
-      gap: 10px;
+      position: relative;
 
       button {
         color: white;
@@ -54,6 +59,69 @@
           display: inline-block;
           padding: 8px 12px;
           font-size: 16px;
+        }
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        border: 1px solid #d5d5d0;
+        border-radius: 25px;
+        padding: 10px;
+        gap: 10px;
+        cursor: pointer;
+
+        &:hover {
+          box-shadow: 0 2px 7px 0 rgb(0, 0, 0, 0.3);
+          transition: all 0.2s ease-in-out;
+        }
+
+        .dots,
+        .circle {
+          font-size: 24px;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .modal {
+        width: 150px;
+        height: 100px;
+        background-color: #fff;
+        position: absolute;
+        right: 0;
+        top: 55px;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        border: 1px solid #dddddd;
+
+        .modalItem {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+
+          &:hover {
+            color: var(--templateColor);
+            transition: all 0.2s ease-in-out;
+
+            a {
+              color: var(--templateColor);
+            }
+          }
+
+          .accountIcon {
+            margin-right: 5px;
+          }
+
+          .logoutIcon {
+            margin-right: 5px;
+          }
         }
       }
     }
