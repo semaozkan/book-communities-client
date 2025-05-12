@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BookCard from "../../components/bookCard/BookCard";
-import dummyBooks from "../../data/dummyBooks";
 import styles from "./audiobooks.module.scss";
+import { bookData } from "../../data/bookData";
 
 const Audiobooks = () => {
   const [favorites, setFavorites] = useState([]);
@@ -28,7 +28,7 @@ const Audiobooks = () => {
         <h1>Sesli Kitaplar</h1>
       </div>
       <div className={styles.booksContainer}>
-        {dummyBooks.map((item) => (
+        {bookData.map((item) => (
           <BookCard
             key={item.id}
             book={item}
