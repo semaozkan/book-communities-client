@@ -4,6 +4,10 @@ import styles from "./home.module.scss";
 import { RiCompassDiscoverLine } from "react-icons/ri";
 import { FaHeadphonesAlt } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
+import { bookData } from "../../data/bookData";
+import BookCard from "./../../components/bookCard/BookCard";
+import { communityData } from "../../data/communityData";
+import CommunityCard from "../../components/communityCard/CommunityCard";
 
 const Home = () => {
   return (
@@ -27,9 +31,28 @@ const Home = () => {
         </div>
       </div>
       <div className={styles.secondSection}>
-        <div className={styles.secondSectionTitle}>Sesli Kitaplar</div>
-        <div className={styles.books}>
-          <Slider />
+        <div className={styles.content}>
+          <div className={styles.secondSectionTitle}>Sesli Kitaplar</div>
+          <div className={styles.books}>
+            <Slider
+              items={bookData}
+              renderItem={(book) => <BookCard book={book} />}
+            />
+          </div>
+        </div>
+
+        <div className={styles.content}>
+          <div className={styles.secondSectionTitle}>Topluluklar</div>
+          <div className={styles.communities}>
+            <Slider
+              items={communityData}
+              cardWidth={550}
+              itemsPerPage={4}
+              renderItem={(community) => (
+                <CommunityCard key={community.id} community={community} />
+              )}
+            />
+          </div>
         </div>
       </div>
       <div className={styles.thirdSection}>
