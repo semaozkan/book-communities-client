@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BookCard from "../../components/bookCard/BookCard";
-import dummyBooks from "../../data/dummyBooks";
 import styles from "./favorites.module.scss";
+import { bookData } from "../../data/bookData";
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -9,7 +9,7 @@ const Favorites = () => {
   useEffect(() => {
     // Geçici olarak dummyBooksu favori gibi alıyoruz
     // Normalde backend'den çekicez
-    setFavorites(dummyBooks);
+    setFavorites(bookData);
   }, []);
 
   const removeFromFavorites = (id) => {
