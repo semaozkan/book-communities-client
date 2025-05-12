@@ -5,8 +5,9 @@ import styles from "./communities.module.scss";
 // import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
+import { communityData } from "../../data/communityData";
 
-const Communities = () => {
+const Communities = ({ community }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -54,14 +55,9 @@ const Communities = () => {
         + Topluluk Oluştur{" "}
       </div>
       <div className={styles.communityContainer}>
-        <CommunityCard />
-        <CommunityCard />
-        <CommunityCard />
-        <CommunityCard />
-        <CommunityCard />
-        <CommunityCard />
-        <CommunityCard />
-        <CommunityCard />
+        {communityData.map((community) => (
+          <CommunityCard key={community.id} community={community} />
+        ))}
       </div>
 
       {isModalOpen && (
