@@ -1,12 +1,48 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./register.module.scss";
 import { useState } from "react";
+import axios from "axios";
 
 const Register = () => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+    const formData = new FormData(e.target);
+
+    const fullname = formData.get("fullname");
+    const username = formData.get("username");
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    try {
+      const res = await axios.post(`${FETCH}auth/register`, {
+        fullname,
+        username,
+        email,
+        password,
+      });
+      console.log(res.data);
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+      setError(err.response.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={styles.registerContainer}>
@@ -18,7 +54,7 @@ const Register = () => {
           <div className={styles.formTitleContainer}>
             <h2>Kayıt Ol</h2>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className={styles.formRow}>
               <label htmlFor="fullname">Ad Soyad:</label>
               <input
@@ -39,6 +75,7 @@ const Register = () => {
                 name="username"
                 id="username"
                 value={username}
+                onFocus={() => setError("")}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Kullanıcı adı"
                 required
@@ -52,6 +89,7 @@ const Register = () => {
                 name="email"
                 id="email"
                 value={email}
+                onFocus={() => setError("")}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Lütfen e-posta adresinizi girin"
                 required
@@ -78,6 +116,13 @@ const Register = () => {
                 Giriş Yap
               </Link>
             </p>
+
+            {error && (
+              <div className={styles.errorBox}>
+                <span className={styles.icon}>❗</span>
+                <span>{error}</span>
+              </div>
+            )}
           </form>
         </div>
       </div>
