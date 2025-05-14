@@ -4,12 +4,13 @@ import styles from "./singleCommunity.module.scss";
 import { MdCameraAlt } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import { LuPlus } from "react-icons/lu";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { AiFillPicture } from "react-icons/ai";
 import MessageModal from "../../components/MessageModal/MessageModal";
+import { useNavigate, useParams } from "react-router-dom";
 
-const SingleCommunity = ({ userRole = "guest" }) => {
+const SingleCommunity = ({ userRole = "admin" }) => {
   const isGuest = userRole === "guest";
 
   const isMember = userRole === "member" || userRole === "admin";
@@ -25,17 +26,58 @@ const SingleCommunity = ({ userRole = "guest" }) => {
 
   const [messageModalOpen, setMessageModalOpen] = useState(false);
 
+  const navigate = useNavigate();
+  const { communityId } = useParams();
+
+  const [isCommunityEditOpen, setIsCommunityEditOpen] = useState(false);
+
+  const [communityName, setCommunityName] = useState(
+    "PaüSiber Kitap Topluluğu"
+  );
+  const [communityDescription, setCommunityDescription] = useState(
+    "Pamukkale Üniversitesi öğrencileri tarafından oluşturulmuş bir topluluk"
+  );
+
+  // Modal için geçici düzenleme alanları
+  const [editedName, setEditedName] = useState(communityName);
+  const [editedDescription, setEditedDescription] =
+    useState(communityDescription);
+
+  const [backgroundImage, setBackgroundImage] = useState(
+    "/images/background_image.png"
+  );
+  const backgroundInputRef = useRef(null);
+
+  const [joinRequested, setJoinRequested] = useState(false);
+
   return (
     <div className={styles.communityContainer}>
       <div className={styles.firstSection}>
         <div className={styles.imgContainer}>
-          <img src="/images/background_image.png" alt="" />
+          <img src={backgroundImage} alt="" />
           <div className={styles.communityProfilePhoto}>
             <img src="/images/pausiber_kitap_topluluğu.png" alt="" />
           </div>
           {isAdmin && (
-            <div className={styles.photoDrapdown}>
+            <div
+              className={styles.photoDrapdown}
+              onClick={() => backgroundInputRef.current.click()}
+            >
               <MdCameraAlt className={styles.cameraIcon} />
+
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                ref={backgroundInputRef}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const imageUrl = URL.createObjectURL(file);
+                    setBackgroundImage(imageUrl);
+                  }
+                }}
+              />
             </div>
           )}
         </div>
