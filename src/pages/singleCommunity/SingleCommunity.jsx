@@ -40,11 +40,8 @@ const SingleCommunity = ({ userRole = "guest" }) => {
           )}
         </div>
         <div className={styles.infoContainer}>
-          <div className={styles.title}>PaüSiber Kitap Topluluğu</div>
-          <div className={styles.dec}>
-            Pamukkale Üniversitesi öğrencileri tarafından oluşturulmuş bir
-            topluluk
-          </div>
+          <div className={styles.title}>{communityName}</div>
+          <div className={styles.dec}>{communityDescription}</div>
           <div className={styles.buttonContainer}>
             {isGuest && (
               <>
@@ -59,14 +56,36 @@ const SingleCommunity = ({ userRole = "guest" }) => {
                 </div>
 
                 <div className={styles.joinButton}>
-                  <button>Katıl</button>
+                  <button
+                    onClick={() => setJoinRequested((prev) => !prev)}
+                    className={`${styles.button} ${
+                      joinRequested ? styles.requested : ""
+                    }`}
+                  >
+                    {joinRequested ? "İsteği Gönderildi" : "Katıl"}
+                  </button>
                 </div>
               </>
             )}
 
             {isAdmin && (
-              <div className={styles.editCommunityInfo}>
-                <MdOutlineEdit className={styles.editIcon} />
+              <div className={styles.adminButtons}>
+                <div
+                  className={styles.editCommunityInfo}
+                  onClick={() => {
+                    setEditedName(communityName);
+                    setEditedDescription(communityDescription);
+                    setIsCommunityEditOpen(true);
+                  }}
+                >
+                  <MdOutlineEdit className={styles.editIcon} />
+                </div>
+
+                <div className={styles.meetButton}>
+                  <button onClick={() => navigate(`/meet/${communityId}`)}>
+                    Toplantı Başlat
+                  </button>
+                </div>
               </div>
             )}
           </div>
