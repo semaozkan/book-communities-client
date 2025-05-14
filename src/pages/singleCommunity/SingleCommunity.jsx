@@ -110,9 +110,54 @@ const SingleCommunity = ({ userRole = "guest" }) => {
 
           {/* <div className={styles.noEvent}>Henüz etkinlik paylaşılmadı</div> */}
           <div className={styles.postCards}>
-            <CommunityPostCard />
-            <CommunityPostCard />
-            <CommunityPostCard />
+            <CommunityPostCard
+              post={{
+                id: 1,
+                content: "Bugün bu kitapları okuyacağız!",
+                image: "/images/postImage.jpg",
+              }}
+              userRole="admin"
+              onEdit={(id, newContent) => {
+                // Backend'den gelen response sonrası local state güncellemesi yapılabilir
+                console.log("Post güncellendi:", id, newContent);
+              }}
+              onDelete={(id) => {
+                // Post silindikten sonra listeden kaldır
+                console.log("Post silindi:", id);
+              }}
+            />
+            <CommunityPostCard
+              post={{
+                id: 1,
+                content: "Bugün bu kitapları okuyacağız!",
+                image: "/images/postImage.jpg",
+              }}
+              userRole="admin"
+              onEdit={(id, newContent) => {
+                // Backend'den gelen response sonrası local state güncellemesi yapılabilir
+                console.log("Post güncellendi:", id, newContent);
+              }}
+              onDelete={(id) => {
+                // Post silindikten sonra listeden kaldır
+                console.log("Post silindi:", id);
+              }}
+            />
+            <CommunityPostCard
+              post={{
+                id: 1,
+                content: "Bugün bu kitapları okuyacağız!",
+                image: "/images/postImage.jpg",
+              }}
+              userRole="admin"
+              onEdit={(id, newContent) => {
+                // Backend'den gelen response sonrası local state güncellemesi yapılabilir
+                console.log("Post güncellendi:", id, newContent);
+              }}
+              onDelete={(id) => {
+                // Post silindikten sonra listeden kaldır
+                console.log("Post silindi:", id);
+              }}
+            />
           </div>
         </div>
         <div className={styles.memberContainer}>
