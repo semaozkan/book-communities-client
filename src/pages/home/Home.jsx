@@ -36,6 +36,7 @@ const Home = () => {
           <div className={styles.books}>
             <Slider
               items={bookData}
+              cardWidth={180}
               renderItem={(book) => <BookCard book={book} />}
             />
           </div>
@@ -46,8 +47,8 @@ const Home = () => {
           <div className={styles.communities}>
             <Slider
               items={communityData}
-              cardWidth={550}
-              itemsPerPage={4}
+              cardWidth={480}
+              itemsPerPage={2}
               renderItem={(community) => (
                 <CommunityCard key={community.id} community={community} />
               )}
@@ -56,39 +57,41 @@ const Home = () => {
         </div>
       </div>
       <div className={styles.thirdSection}>
-        <div className={styles.imgContainer}>
-          <img src="/images/books2.png" alt="books" />
-        </div>
-        <div className={styles.textContainer}>
-          <div className={styles.title}>
-            En Sevdiğiniz Kitaplar <br />
-            <span>Burada!</span>
+        <div className={styles.thirdSectionContent}>
+          <div className={styles.imgContainer}>
+            <img src="/images/books2.png" alt="books" />
           </div>
-          <div className={styles.text}>
-            <br />
-            Bibliyofil’de favori kitaplarını keşfet, okuma arkadaşları edin,
-            sesli kitapları dinle ve kitaplar üzerine sohbet et. Okumak sadece
-            bireysel bir yolculuk değil — birlikte daha keyifli!
-          </div>
-          <div className={styles.icons}>
-            <div className={styles.icon}>
-              <RiCompassDiscoverLine />
-              <span>Keşfet</span>
+          <div className={styles.textContainer}>
+            <div className={styles.title}>
+              En Sevdiğiniz Kitaplar <br />
+              <span>Burada!</span>
             </div>
+            <div className={styles.text}>
+              <br />
+              Bibliyofil’de favori kitaplarını keşfet, okuma arkadaşları edin,
+              sesli kitapları dinle ve kitaplar üzerine sohbet et. Okumak sadece
+              bireysel bir yolculuk değil — birlikte daha keyifli!
+            </div>
+            <div className={styles.icons}>
+              <div className={styles.icon}>
+                <RiCompassDiscoverLine />
+                <span>Keşfet</span>
+              </div>
 
-            <div className={styles.icon}>
-              <FaHeadphonesAlt />
-              <span>Dinle</span>
-            </div>
+              <div className={styles.icon}>
+                <FaHeadphonesAlt />
+                <span>Dinle</span>
+              </div>
 
-            <div className={styles.icon}>
-              <FaUsers />
-              <span>Katıl</span>
+              <div className={styles.icon}>
+                <FaUsers />
+                <span>Katıl</span>
+              </div>
             </div>
+            <a href="">
+              <button>Daha fazlasını keşfedin</button>
+            </a>
           </div>
-          <a href="">
-            <button>Daha fazlasını keşfedin</button>
-          </a>
         </div>
       </div>
     </div>
