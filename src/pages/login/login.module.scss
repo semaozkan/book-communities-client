@@ -24,6 +24,7 @@
 
     .formContent {
       max-width: 400px;
+
       .formTitleContainer {
         h2 {
           font-size: 48px;
@@ -72,6 +73,23 @@
           .registerLink {
             text-decoration: none;
             color: var(--templateColor);
+          }
+        }
+
+        .errorBox {
+          color: #d0021b;
+          font-size: 12px;
+          line-height: 15px;
+          padding: 14px 20px 13px;
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+          border: 1px solid;
+          border-radius: 3px;
+          background-color: #fff4f6;
+
+          .icon {
+            font-weight: bold;
           }
         }
       }
