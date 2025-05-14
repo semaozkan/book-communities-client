@@ -16,8 +16,14 @@ const DonationCard = ({ onModalOpen }) => {
       </div>
 
       <div className={styles.infoContainer}>
-        <div className={styles.bookName}>Küçük Prens</div>
-        <div className={styles.autor}>Antoine de Saint-Exupéry</div>
+        <div className={styles.bookInfo}>
+          <div className={styles.bookName}>Küçük Prens</div>
+          <div className={styles.autor}>Antoine de Saint-Exupéry</div>
+        </div>
+
+        <a href="/profile" className={styles.bookDonor}>
+          Bağışçı: Semanur Özkan
+        </a>
       </div>
 
       <div

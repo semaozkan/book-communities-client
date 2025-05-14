@@ -27,6 +27,31 @@
   }
 
   .infoContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .bookInfo {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+
+      &.bookDonor {
+        font-size: 14px;
+        font-weight: 500;
+        font-style: italic;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
   }
 
   .donationButton {
