@@ -1,0 +1,200 @@
+.audiobookContainer {
+  width: 100vw;
+  height: calc(100vh - 300px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  //   background-color: brown;
+
+  .audiobookContent {
+    width: 1600px;
+    padding: 40px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .bookInfosContainer {
+      display: flex;
+      gap: 100px;
+
+      .bookInfos {
+        // flex: 1;
+        // background-color: chocolate;
+
+        .bookImg {
+          width: 300px;
+          height: 300px;
+          background-color: var(--bg2);
+          border-radius: 12px;
+          margin-bottom: 24px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+
+        .bookDetails {
+          font-size: 16px;
+        }
+      }
+
+      .bookTextContainer {
+        width: 700px;
+        height: 700px;
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        padding: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .bookTextContent {
+          flex: 1; // 💡 Geriye kalan tüm alanı kaplasın
+          overflow: hidden;
+
+          .bookText {
+            font-size: 16px;
+            line-height: 1.7;
+            word-break: keep-all; // 💡 kelimeler bölünmesin
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            height: 630px;
+          }
+
+          .hiddenMeasureDiv {
+            visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            width: 100%;
+            height: 630px;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            font-size: 16px;
+            font-family: inherit;
+          }
+        }
+
+        .pageButtons {
+          height: 40px;
+          margin-top: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          button {
+            padding: 4px 12px;
+            background-color: white;
+            border: 1px solid var(--lighterColor);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+
+            &:hover {
+              color: white;
+              background-color: var(--templateColor);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .audioContainer {
+    width: 800px;
+    position: fixed;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+
+    audio {
+      width: 100%;
+      // max-width: 800px;
+      margin: 0;
+      padding: 0;
+      display: block;
+    }
+  }
+}
+
+.compact {
+  .audiobookContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 0;
+
+    .bookInfosContainer {
+      gap: 40px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: center;
+
+      .bookInfos {
+        min-width: unset;
+        max-width: unset;
+
+        .bookImg {
+          width: 250px;
+          height: 250px;
+          background-color: var(--bg2);
+          border-radius: 12px;
+          margin-bottom: 24px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+        .bookDetails {
+          font-size: 16px;
+          text-align: left;
+          width: 100%;
+        }
+      }
+      .bookTextContainer {
+        width: 800px;
+        height: 500px;
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        padding: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .bookTextContent {
+          overflow-y: auto;
+
+          .bookText {
+          }
+        }
+
+        .pageButtons {
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+
+  .audioContainer {
+    position: static;
+    margin: 32px auto 0 auto;
+    display: flex;
+    justify-content: center;
+    width: 500px;
+
+    audio {
+      max-width: 500px;
+    }
+  }
+}
