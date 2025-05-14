@@ -382,4 +382,72 @@
     bottom: 0;
     right: 30px;
   }
+
+  .modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .modalContent {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+
+      .modalHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .close {
+          font-size: 20px;
+          cursor: pointer;
+        }
+      }
+
+      .input,
+      .textarea {
+        width: 100%;
+        margin-top: 12px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+
+      .textarea {
+        height: 100px;
+        resize: none;
+      }
+
+      .modalActions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+
+        .saveButton,
+        .cancelButton {
+          padding: 8px 16px;
+          border-radius: 6px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .saveButton {
+          background-color: #0c66c2;
+          color: white;
+        }
+
+        .cancelButton {
+          background-color: #eee;
+        }
+      }
+    }
+  }
 }

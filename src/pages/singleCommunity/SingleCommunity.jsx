@@ -193,6 +193,60 @@ const SingleCommunity = ({ userRole = "guest" }) => {
           />
         )}
       </div>
+
+      {isCommunityEditOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setIsCommunityEditOpen(false)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h3>Topluluğu Düzenle</h3>
+              <IoClose
+                className={styles.close}
+                onClick={() => setIsCommunityEditOpen(false)}
+              />
+            </div>
+
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              className={styles.input}
+              placeholder="Topluluk Adı"
+            />
+
+            <textarea
+              value={editedDescription}
+              onChange={(e) => setEditedDescription(e.target.value)}
+              className={styles.textarea}
+              placeholder="Topluluk açıklaması"
+            />
+
+            <div className={styles.modalActions}>
+              <button
+                className={styles.saveButton}
+                onClick={() => {
+                  setCommunityName(editedName);
+                  setCommunityDescription(editedDescription);
+                  setIsCommunityEditOpen(false);
+                }}
+              >
+                Kaydet
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => setIsCommunityEditOpen(false)}
+              >
+                İptal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
