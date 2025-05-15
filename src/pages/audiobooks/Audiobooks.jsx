@@ -2,6 +2,7 @@ import { useState } from "react";
 import BookCard from "../../components/bookCard/BookCard";
 import styles from "./audiobooks.module.scss";
 import { bookData } from "../../data/bookData";
+import Search from "../../components/search/Search";
 
 const Audiobooks = () => {
   const [favorites, setFavorites] = useState([]);
@@ -26,6 +27,10 @@ const Audiobooks = () => {
         </svg>
 
         <h1>Sesli Kitaplar</h1>
+      </div>
+
+      <div className={styles.searchContainer}>
+        <Search />
       </div>
       <div className={styles.booksContainer}>
         {bookData.map((item) => (
