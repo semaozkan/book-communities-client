@@ -9,6 +9,7 @@
     height: calc(65vh - 80px);
     position: relative;
     overflow: hidden;
+    margin-bottom: 100px;
 
     img {
       width: 100%;
@@ -58,7 +59,7 @@
   }
 
   .communityContainer {
-    width: 1400px;
+    width: 1600px;
     display: flex;
     align-items: center;
     justify-content: center;

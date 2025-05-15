@@ -6,6 +6,7 @@ import styles from "./communities.module.scss";
 import { IoClose } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { communityData } from "../../data/communityData";
+import Search from "../../components/search/Search";
 
 const Communities = ({ community }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,6 +55,11 @@ const Communities = ({ community }) => {
       >
         + Topluluk Oluştur{" "}
       </div>
+
+      <div className={styles.searchContainer}>
+        <Search />
+      </div>
+
       <div className={styles.communityContainer}>
         {communityData.map((community) => (
           <CommunityCard key={community.id} community={community} />
