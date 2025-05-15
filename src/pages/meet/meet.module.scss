@@ -1,0 +1,201 @@
+.meetContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  padding: 30px;
+  // background: #f9f9f9;
+  background-color: aqua;
+  gap: 10px;
+  overflow: hidden;
+
+  .mainContent {
+    display: flex;
+    gap: 30px;
+
+    .leftPanel {
+      flex: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 0;
+      border-radius: 10px;
+      background-color: white;
+      overflow: hidden;
+
+      h2 {
+        margin-bottom: 30px;
+      }
+
+      .books {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        overflow: visible;
+
+        .bookList {
+          display: flex;
+          flex-wrap: wrap;
+          padding: 20px;
+          margin-left: 16px;
+          gap: 40px;
+        }
+      }
+    }
+
+    .rightPanel {
+      position: relative;
+      flex: 1;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: white;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .rightTitle {
+        margin-bottom: 26px;
+      }
+
+      .members {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .member {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .image {
+            width: 40px;
+            height: 40px;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+          }
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+
+      .chatBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid rgb(140 140 140/0.2);
+        gap: 10px;
+        height: 580px;
+        padding: 10px;
+        border-radius: 6px;
+
+        .messages {
+          height: 100%;
+          overflow-y: auto;
+        }
+
+        .inputField {
+          margin-bottom: 10px;
+
+          .inputWrapper {
+            position: relative;
+
+            input {
+              resize: none;
+              width: 100%;
+              padding: 12px 44px 12px 12px;
+              border: none;
+              border-radius: 20px;
+              font-size: 14px;
+              background-color: #f4f2ee;
+
+              &:focus {
+                outline: none;
+              }
+            }
+
+            .sendIcon {
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              font-size: 20px;
+              color: #555;
+              cursor: pointer;
+              transition: color 0.2s ease-in-out;
+
+              &:hover {
+                color: var(--templateColor);
+              }
+            }
+          }
+        }
+      }
+
+      .tabButtons {
+        padding-top: 10px;
+
+        button {
+          background: white;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          margin-right: 10px;
+          font-size: 18px;
+          cursor: pointer;
+
+          &.active {
+            background: var(--templateColor);
+            color: white;
+          }
+
+          .usersIcon,
+          .messageIcon {
+          }
+        }
+      }
+    }
+  }
+
+  .bottomBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 16px 0;
+    border-radius: 10px;
+
+    .leaveButton {
+      background-color: #d32f2f;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+
+      &:hover {
+        background-color: #b71c1c;
+      }
+    }
+  }
+
+  .notAllowed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    color: red;
+    font-weight: bold;
+  }
+}
