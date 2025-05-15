@@ -3,12 +3,14 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  margin-bottom: 50px;
 
   .imgContainer {
     width: 100%;
     height: calc(65vh - 180px);
     position: relative;
     overflow: hidden;
+    margin-bottom: 100px;
 
     img {
       width: 100%;

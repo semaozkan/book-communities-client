@@ -3,6 +3,7 @@ import DonationCard from "../../components/donationCard/DonationCard";
 import styles from "./bookDonation.module.scss";
 import { IoClose } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
+import Search from "../../components/search/Search";
 
 const BookDonation = () => {
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
@@ -50,6 +51,10 @@ const BookDonation = () => {
         }}
       >
         + Bağış Yap{" "}
+      </div>
+
+      <div className={styles.searchContainer}>
+        <Search />
       </div>
 
       <div className={styles.mainContainer}>
