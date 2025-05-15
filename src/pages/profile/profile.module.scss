@@ -1,0 +1,325 @@
+.profileContainer {
+  width: 100vw;
+  height: 100vh;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f2ee;
+  //   gap: 12px;
+
+  .mainContainer {
+    height: 100%;
+    padding-bottom: 50px;
+    background-color: white;
+    border-radius: 12px 12px 0 0;
+
+    .header {
+      gap: 20px;
+
+      .imgContainer {
+        position: relative;
+        width: 1000px;
+        height: 200px;
+        margin-bottom: 70px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 12px 12px 0 0;
+          object-fit: cover;
+        }
+
+        .profilePhoto {
+          width: 152px;
+          height: 152px;
+          position: absolute;
+          bottom: -25%;
+          left: 36px;
+          cursor: pointer;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
+        .photoDrapdown {
+          position: absolute;
+          top: 24px;
+          right: 24px;
+          width: 36px;
+          height: 36px;
+          color: #0c66c2;
+          background-color: white;
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+
+          .cameraIcon {
+            width: 60%;
+            height: 60%;
+          }
+        }
+      }
+
+      .infoContainer {
+        position: relative;
+        padding-left: 36px;
+
+        .bio {
+          font-style: italic;
+          color: #555;
+        }
+
+        .edit {
+          position: absolute;
+          top: -60px;
+          right: 16px;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.2s ease-in-out;
+
+          .editIcon {
+            width: 30px;
+            height: 30px;
+          }
+
+          &:hover {
+            background-color: rgb(140 140 140 / 0.1);
+          }
+        }
+
+        .messageButton {
+          position: absolute;
+          top: 0px;
+          right: 16px;
+
+          button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 16px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 2px solid var(--templateColor);
+            border-radius: 20px;
+            background-color: white;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+
+            .sendIcon {
+              width: 20px;
+              height: 20px;
+            }
+
+            &:hover {
+              color: white;
+              background-color: var(--templateColor);
+            }
+          }
+        }
+      }
+    }
+
+    .section {
+      margin-top: 30px;
+      padding-left: 36px;
+
+      h3 {
+        margin-bottom: 10px;
+      }
+
+      ul {
+        padding-left: 20px;
+        list-style-type: disc;
+      }
+    }
+  }
+
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9;
+
+    .modalContent {
+      width: 700px;
+
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+
+      text-align: center;
+
+      .header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 6px;
+
+        .closeButton {
+          top: 0;
+          right: 0;
+
+          .closeIcon {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .photo {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+      }
+
+      .modalActions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+
+        button {
+          margin: 5px;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 8px;
+          background: #f0f0f0;
+          cursor: pointer;
+          transition: 0.2s ease-in-out;
+
+          &:hover {
+            background-color: #dcdcdc; // koyu griye yakın
+          }
+        }
+      }
+    }
+  }
+
+  .modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); // arka plan karartması
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+
+    .bioModalContent {
+      background-color: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.3s ease;
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modalHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h3 {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 600;
+        }
+
+        .close {
+          font-size: 22px;
+          cursor: pointer;
+          color: #666;
+
+          &:hover {
+            color: #000;
+          }
+        }
+      }
+
+      .bioInput {
+        width: 100%;
+        height: 100px;
+        margin-top: 16px;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        resize: none;
+        font-family: inherit;
+      }
+
+      .bioModalActions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+
+        button {
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          border: none;
+          transition: background-color 0.2s ease;
+
+          &.saveButton {
+            background-color: #0c66c2;
+            color: white;
+
+            &:hover {
+              background-color: #084f9c;
+            }
+          }
+
+          &.cancelButton {
+            background-color: #f0f0f0;
+            color: #333;
+
+            &:hover {
+              background-color: #ddd;
+            }
+          }
+        }
+      }
+    }
+  }
+}
