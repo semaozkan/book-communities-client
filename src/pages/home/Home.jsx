@@ -8,6 +8,7 @@ import { bookData } from "../../data/bookData";
 import BookCard from "./../../components/bookCard/BookCard";
 import { communityData } from "../../data/communityData";
 import CommunityCard from "../../components/communityCard/CommunityCard";
+import Search from "../../components/search/Search";
 
 const Home = () => {
   return (
@@ -16,7 +17,7 @@ const Home = () => {
         <div className={styles.imageContainer}>
           <img src="/images/home.jpg" alt="" />
         </div>
-        <div className={styles.searchBarContainer}>
+        <div className={styles.entryContainer}>
           <div className={styles.title}>Bibliyofil Dünyasına Hoş Geldiniz!</div>
           <div className={styles.text}>
             Kitap okumayı sevenleri bir araya getiren, paylaşmayı seven bir
@@ -24,10 +25,12 @@ const Home = () => {
             zenginleştirecek etkinlikler, öneriler ve topluluklar sizi bekliyor.
             Hadi, birlikte keşfedelim!
           </div>
-          <div className={styles.searchBar}>
+
+          <Search />
+          {/* <div className={styles.searchBar}>
             <input type="text" placeholder="Kitap ara" />
             <button>Ara</button>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className={styles.secondSection}>
