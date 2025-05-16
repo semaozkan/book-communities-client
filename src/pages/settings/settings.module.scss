@@ -1,0 +1,138 @@
+.settings {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f3f2ef;
+  display: flex;
+
+  .sideBar {
+    width: 280px;
+    height: 100%;
+    background-color: white;
+
+    .header {
+      font-size: 36px;
+      font-weight: 500;
+      padding: 24px;
+    }
+
+    .itemContainer {
+      .item {
+        font-size: 20px;
+        padding: 28px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+
+        &.active {
+          color: #057642;
+          box-shadow: 3 px 0 0 #01754f inset;
+          //   background-color: #edf3f8;
+        }
+      }
+    }
+  }
+
+  .mainContainer {
+    width: calc(100% - 280px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0;
+
+    .mainContent {
+      width: 800px;
+      background-color: white;
+      padding: 24px;
+      //   margin: 50px 0;
+      border-radius: 8px;
+
+      .personalInfo {
+        .title {
+          font-size: 28px;
+          border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+          margin-bottom: 20px;
+        }
+
+        .infoContainer {
+          display: flex;
+          flex-direction: column;
+          border-bottom: 1px solid #ebebeb;
+          padding: 24px 0;
+          color: #222222;
+          gap: 6px;
+
+          &.passwordContainer {
+            border: none;
+          }
+
+          .info {
+            display: flex;
+            justify-content: space-between;
+
+            span {
+              font-size: 14px;
+            }
+
+            .editButton {
+              color: #057642;
+              border: none;
+              background-color: white;
+              cursor: pointer;
+            }
+          }
+
+          .editContainer {
+            .content {
+              margin-top: 4px;
+              color: #6a6a6a;
+            }
+
+            .inputContainer {
+              display: flex;
+              gap: 16px;
+              margin: 24px 0;
+
+              .inputContent {
+                border: 1px solid #cbcbcb;
+                border-radius: 10px;
+                padding: 6px 12px;
+                flex: 1;
+
+                .userName {
+                  font-size: 12px;
+                  color: #6a6a6a;
+                }
+
+                input {
+                  width: 100%;
+                  position: relative;
+                  font-size: 16px;
+                  border-style: none;
+                  outline: none;
+                }
+              }
+            }
+
+            .saveButton {
+              padding: 12px 20px;
+              background-color: #222;
+              width: min-content; /* içindeki content kadar yer kapla*/
+              color: #fff;
+              margin-top: 5px;
+              border-radius: 10px;
+              cursor: pointer;
+
+              &.password {
+                width: max-content;
+                height: min-content;
+                background-color: #057642;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
