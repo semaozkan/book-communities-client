@@ -1,0 +1,54 @@
+.messagePreviewCard {
+  display: flex;
+  padding: 12px;
+  max-width: 100%;
+  border-bottom: 1px solid rgb(140 140 140/0.4);
+  cursor: pointer;
+
+  &.active {
+    box-shadow: 4px 0 0 #01754f inset;
+    background-color: #edf3f8;
+  }
+
+  &:hover {
+    background-color: #ebebeb;
+  }
+
+  .imageContainer {
+    margin-right: 12px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  .senderInfo {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+
+    .senderName {
+      width: 100%;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lastMessage {
+      font-size: 14px;
+      color: rgb(0, 0, 0, 0.6);
+    }
+
+    .time {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 14px;
+      color: #000000e6;
+    }
+  }
+}
