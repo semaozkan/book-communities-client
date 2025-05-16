@@ -5,12 +5,16 @@ const Notification = () => {
   return (
     <div className={styles.notification}>
       <div className={styles.container}>
-        <NotificationCard />
-        <NotificationCard />
-        <NotificationCard />
-        <NotificationCard />
-        <NotificationCard />
-        <NotificationCard />
+        <div className={styles.header}>Bildirimler</div>
+
+        <div className={styles.notifications}>
+          <NotificationCard />
+          <NotificationCard />
+          <NotificationCard />
+          <NotificationCard />
+          <NotificationCard />
+          <NotificationCard />
+        </div>
       </div>
     </div>
   );
