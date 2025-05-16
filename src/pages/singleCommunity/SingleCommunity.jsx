@@ -205,9 +205,15 @@ const SingleCommunity = ({ userRole = "admin" }) => {
         <div className={styles.memberContainer}>
           <div className={styles.header}>Üyeler</div>
           <div className={styles.members}>
-            <CommunityMember customStyle={styles.singleMember} />
-            <CommunityMember customStyle={styles.singleMember} />
-            <CommunityMember />
+            <CommunityMember
+              customStyle={styles.singleMember}
+              onMessageClick={() => setMessageModalOpen(true)}
+            />
+            <CommunityMember
+              customStyle={styles.singleMember}
+              onMessageClick={() => setMessageModalOpen(true)}
+            />
+            <CommunityMember onMessageClick={() => setMessageModalOpen(true)} />
           </div>
         </div>
       </div>
