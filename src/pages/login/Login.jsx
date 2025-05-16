@@ -2,9 +2,12 @@ import { useState } from "react";
 import styles from "./login.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const FETCH = import.meta.env.VITE_FETCH_URL;
+
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,13 +28,18 @@ const Login = () => {
     const password = formData.get("password");
 
     try {
-      const res = await axios.post(`${FETCH}auth/login`, {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${FETCH}auth/login`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
 
-      localStorage.setItem("user", JSON.stringify(res.data));
-
+      // localStorage.setItem("user", JSON.stringify(res.data));
+      const userData = res.data;
+      login(userData);
       console.log(res);
 
       navigate("/");
