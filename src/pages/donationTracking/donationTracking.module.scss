@@ -1,0 +1,444 @@
+.trackingContainer {
+  width: 1400px;
+  min-height: 100vh;
+  padding: 42px 36px 40px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  margin-bottom: 48px;
+  gap: 48px;
+  min-width: 700px;
+  max-width: 900px;
+  width: 900px;
+  position: relative;
+  justify-content: space-between;
+}
+
+.statusLabel {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 9px 28px;
+  border-radius: 22px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: inline-block;
+  transition: background 0.2s, color 0.2s;
+}
+
+.bookImage {
+  width: 90px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f4f2ee;
+}
+
+.bookInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+}
+.bookTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+}
+.bookAuthor {
+  font-size: 16px;
+  color: #888;
+}
+.donorInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.donorImage {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 6px;
+}
+.donorName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.body {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  width: 100%;
+  max-width: 1400px;
+  justify-content: center;
+  align-items: flex-start;
+}
+.left {
+  width: 320px;
+  min-width: 260px;
+  max-width: 340px;
+}
+.right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.right .header {
+  width: 98%;
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: 0;
+  margin-left: 18px;
+}
+.right .messageSection {
+  width: 98%;
+  min-width: 0;
+  max-width: 100%;
+  height: 58vh;
+  margin-top: 0;
+  margin-left: 18px;
+}
+
+.applicantsSection {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 32px 24px;
+  min-width: 360px;
+  max-width: 360px;
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 41vw;
+}
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  color: #0c66c2;
+}
+.applicantList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.applicantList li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: background 0.15s;
+  font-size: 17px;
+}
+.applicantList li:hover,
+.selectedApplicant {
+  background: #f4f2ee;
+}
+.applicantImage {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.selectBtn {
+  margin-left: auto;
+  background: var(--templateColor);
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 7px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.selectBtn:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  cursor: default;
+}
+.applicantStatusLabel {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.messageSection {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 32px 24px;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 480px;
+}
+.messages {
+  flex: 1;
+  min-height: 370px;
+  max-height: 370px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.myMsg {
+  align-self: flex-end;
+  background: #eaf6ff;
+  color: #0c66c2;
+  padding: 10px 18px;
+  border-radius: 18px 18px 6px 18px;
+  max-width: 70%;
+  font-size: 16px;
+}
+.otherMsg {
+  align-self: flex-start;
+  background: #f4f2ee;
+  color: #333;
+  padding: 10px 18px;
+  border-radius: 18px 18px 18px 6px;
+  max-width: 70%;
+  font-size: 16px;
+}
+.inputArea {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.inputArea input {
+  flex: 1;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 16px;
+}
+.inputArea button {
+  background: var(--templateColor);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.inputArea button:hover {
+  background: #e14a0b;
+}
+
+.trackingSection {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 24px 18px;
+  min-width: 320px;
+  max-width: 400px;
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.trackingBox {
+  margin: 18px 0 12px 0;
+  background: #f7f8fa;
+  border-radius: 10px;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.trackingStep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #888;
+}
+.stepActive {
+  color: var(--templateColor);
+  font-weight: 700;
+}
+.stepLine {
+  flex: 1;
+  height: 3px;
+  background: #eee;
+  border-radius: 2px;
+  margin: 0 4px;
+}
+.trackingStatus {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.statusInProgress {
+  background: #eaf6ff;
+  color: #0c66c2;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.statusDelay {
+  background: #fff3e0;
+  color: #e14a0b;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+.cancelBtn {
+  background: #fff;
+  color: #e14a0b;
+  border: 2px solid #e14a0b;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.cancelBtn:hover {
+  background: #ffe5d1;
+}
+.notifyBtn {
+  background: var(--templateColor);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.notifyBtn:hover {
+  background: #e14a0b;
+}
+
+.settingsBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #fff8e1;
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.15s;
+  margin-left: 8px;
+}
+.settingsBtn:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #fff3c0;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modalContent {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  padding: 36px 32px 28px 32px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: stretch;
+}
+.modalActionBtn {
+  min-width: 110px;
+  background: #388e3c;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 0;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 6px;
+  transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+  letter-spacing: 0.5px;
+  margin-right: 18px;
+  outline: none;
+}
+.modalActionBtn:last-child {
+  margin-right: 0;
+}
+.modalActionBtn:hover {
+  background: #2e7031;
+  color: #fff;
+}
+.modalActionBtn.cancel {
+  background: #fff;
+  color: #d32f2f;
+  border: 2px solid #d32f2f;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.08);
+}
+.modalActionBtn.cancel:hover {
+  background: #ffeaea;
+  color: #b71c1c;
+  border: 2px solid #b71c1c;
+}
+
+@media (max-width: 1200px) {
+  .body {
+    flex-direction: column;
+    gap: 32px;
+    max-width: 98vw;
+  }
+  .left,
+  .right {
+    width: 100%;
+    max-width: 100vw;
+  }
+}
