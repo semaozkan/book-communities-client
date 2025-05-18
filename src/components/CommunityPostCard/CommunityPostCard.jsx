@@ -3,6 +3,9 @@ import styles from "./communityPostCard.module.scss";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { MdOutlineEdit } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa6";
 
 const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
   const isMember = userRole === "member" || userRole === "admin";
@@ -66,6 +69,19 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
     }
   };
 
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  const toggleLike = () => {
+    if (liked) {
+      setLiked(false);
+      setLikeCount((prev) => prev - 1);
+    } else {
+      setLiked(true);
+      setLikeCount((prev) => prev + 1);
+    }
+  };
+
   return (
     <div className={styles.cardContainer}>
       <div className={styles.header}>
@@ -111,7 +127,21 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
           devam edeceğiz.
         </div>
       </div>
-
+      <div className={styles.postFooter}>
+        <div className={styles.likeContainer}>
+          <div onClick={toggleLike}>
+            {liked ? (
+              <FaHeart className={styles.likeIcon} />
+            ) : (
+              <FaRegHeart className={styles.likeIcon} />
+            )}
+          </div>
+          <div className={styles.counter}>{likeCount}</div>
+        </div>
+        <div className={styles.commentContainer}>
+          <FaRegCommentDots className={styles.commentIcon} />
+        </div>
+      </div>
       {isEditModalOpen && (
         <div
           className={styles.modalOverlay}
