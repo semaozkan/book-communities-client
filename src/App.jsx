@@ -20,6 +20,11 @@ import Meet from "./pages/meet/Meet";
 import Footer from "./components/footer/Footer";
 import About from "./pages/about/About";
 import Profile from "./pages/profile/Profile";
+import Notification from "./pages/notification/Notification";
+import Messages from "./pages/messages/Messages";
+// import { IoSettings } from "react-icons/io5";
+import Settings from "./pages/settings/Settings";
+import DonationTracking from "./pages/donationTracking/DonationTracking";
 
 function App() {
   return (
@@ -37,6 +42,10 @@ function App() {
             <Route path="/community" element={<SingleCommunity />} />
             <Route path="/bookDonation" element={<BookDonation />} />
             <Route
+              path="/bookDonation/:donationId"
+              element={<DonationTracking />}
+            />
+            <Route
               path="/book/:bookId/summaries/:summaryId"
               element={<SummaryDetail />}
             />
@@ -50,6 +59,9 @@ function App() {
             <Route path="/meet/:communityId" element={<Meet />} />
             <Route path="/about" element={<About />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/notification" element={<Notification />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/settings" element={<Settings />} />
 
           </Routes>
           <Footer />
