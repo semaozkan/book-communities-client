@@ -34,30 +34,143 @@
         color: #191919;
       }
 
+      // .messageButton {
+      //   button {
+      //     display: flex;
+      //     align-items: center;
+      //     gap: 5px;
+      //     padding: 6px 16px;
+      //     margin-bottom: 12px;
+      //     font-size: 15px;
+      //     font-weight: 500;
+      //     border: 2px solid var(--templateColor);
+      //     border-radius: 20px;
+      //     background-color: white;
+      //     cursor: pointer;
+      //     transition: 0.2s ease-in-out;
+
+      //     .sendIcon {
+      //       width: 20px;
+      //       height: 20px;
+      //     }
+
+      //     &:hover {
+      //       color: white;
+      //       background-color: var(--templateColor);
+      //     }
+      //   }
+      // }
+
+      .buttonGroup {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+        margin-bottom: 16px;
+      }
+
       .messageButton {
-        button {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 6px 16px;
-          margin-bottom: 12px;
-          font-size: 15px;
-          font-weight: 500;
-          border: 2px solid var(--templateColor);
-          border-radius: 20px;
+        display: flex;
+        align-items: center;
+        border: 1px solid #ff5c00;
+        background-color: white;
+        color: #ff5c00;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: 0.2s ease-in-out;
+
+        .sendIcon {
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          color: white;
+          background-color: var(--templateColor);
+        }
+      }
+
+      .removeButton {
+        width: max-content;
+        display: flex;
+        align-items: center;
+        border: 1px solid #e74c3c;
+        background-color: white;
+        color: #e74c3c;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: 0.2s ease-in-out;
+
+        &:hover {
+          color: white;
+          background-color: #e74c3c;
+        }
+      }
+
+      .sendIcon,
+      .removeIcon {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+
+      .modalTitle {
+        font-size: 20px;
+        font-weight: 600;
+        color: #e74c3c;
+        margin-bottom: 16px;
+      }
+
+      .modalText {
+        font-size: 16px;
+        margin-bottom: 24px;
+      }
+
+      .modalActions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+
+        .cancelButton {
           background-color: white;
+          color: #333;
+          border: 1px solid #999;
+          padding: 8px 12px;
+          border-radius: 8px;
           cursor: pointer;
-          transition: 0.2s ease-in-out;
+        }
 
-          .sendIcon {
-            width: 20px;
-            height: 20px;
-          }
-
-          &:hover {
-            color: white;
-            background-color: var(--templateColor);
-          }
+        .confirmButton {
+          background-color: #e74c3c;
+          color: white;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 8px;
+          cursor: pointer;
         }
       }
     }
