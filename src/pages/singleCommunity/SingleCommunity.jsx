@@ -130,6 +130,14 @@ const SingleCommunity = ({ userRole = "admin" }) => {
                 </div>
               </div>
             )}
+
+            {isMember && !isAdmin && (
+              <div className={styles.memberButtons}>
+                <button className={styles.leaveCommunity}>
+                  Topluluktan Ayrıl
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -208,12 +216,17 @@ const SingleCommunity = ({ userRole = "admin" }) => {
             <CommunityMember
               customStyle={styles.singleMember}
               onMessageClick={() => setMessageModalOpen(true)}
+              userRole="admin"
             />
             <CommunityMember
               customStyle={styles.singleMember}
               onMessageClick={() => setMessageModalOpen(true)}
+              userRole="admin"
             />
-            <CommunityMember onMessageClick={() => setMessageModalOpen(true)} />
+            <CommunityMember
+              onMessageClick={() => setMessageModalOpen(true)}
+              userRole="admin"
+            />
           </div>
         </div>
       </div>
