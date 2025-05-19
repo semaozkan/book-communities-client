@@ -5,18 +5,20 @@ const CommunityCard = ({ community }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/community`);
+    navigate(`/community/${community._id}`);
   };
 
   return (
     <div onClick={handleCardClick} className={styles.container}>
       <div className={styles.imgContainer}>
-        <img src={community.image} alt="" />
+        <img src={community?.profileImage} alt="profile_Image" />
       </div>
 
       <div className={styles.infoContainer}>
-        <div className={styles.name}>{community.name}</div>
-        <div className={styles.disc}>Katılımcı Sayısı: {community.members}</div>
+        <div className={styles.name}>{community?.name}</div>
+        <div className={styles.disc}>
+          Katılımcı Sayısı: {community?.members.length}
+        </div>
       </div>
 
       {/* <div className={styles.joinButton}>
