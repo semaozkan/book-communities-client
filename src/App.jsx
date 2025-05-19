@@ -39,7 +39,10 @@ function App() {
             <Route path="/audiobooks" element={<Audiobooks />} />
             <Route path="/communities" element={<Communities />} />
             <Route path="/book/:bookId" element={<BookDetail />} />
-            <Route path="/community" element={<SingleCommunity />} />
+            <Route
+              path="/community/:communityId"
+              element={<SingleCommunity />}
+            />
             <Route path="/bookDonation" element={<BookDonation />} />
             <Route
               path="/bookDonation/:donationId"
@@ -58,7 +61,7 @@ function App() {
 
             <Route path="/meet/:communityId" element={<Meet />} />
             <Route path="/about" element={<About />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/notification" element={<Notification />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/settings" element={<Settings />} />
