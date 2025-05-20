@@ -9,54 +9,198 @@ import { IoClose } from "react-icons/io5";
 import { AiFillPicture } from "react-icons/ai";
 import MessageModal from "../../components/MessageModal/MessageModal";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
-const SingleCommunity = ({ userRole = "admin" }) => {
-  const isGuest = userRole === "guest";
-
-  const isMember = userRole === "member" || userRole === "admin";
-
-  const isAdmin = userRole === "admin";
-
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-
-  const [postText, setPostText] = useState("");
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const fileInputRef = useRef(null);
-
-  const [messageModalOpen, setMessageModalOpen] = useState(false);
+const SingleCommunity = () => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+  const { user: loggedInUser } = useAuth();
 
   const navigate = useNavigate();
   const { communityId } = useParams();
 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isMember, setIsMember] = useState(false);
+  const [isSendRequest, setIsSendRequest] = useState(false);
+
+  const [community, setCommunity] = useState({});
+
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [postContent, setPostContent] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const [messageModalOpen, setMessageModalOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [isCommunityEditOpen, setIsCommunityEditOpen] = useState(false);
 
-  const [communityName, setCommunityName] = useState(
-    "PaüSiber Kitap Topluluğu"
-  );
-  const [communityDescription, setCommunityDescription] = useState(
-    "Pamukkale Üniversitesi öğrencileri tarafından oluşturulmuş bir topluluk"
-  );
-
   // Modal için geçici düzenleme alanları
-  const [editedName, setEditedName] = useState(communityName);
-  const [editedDescription, setEditedDescription] =
-    useState(communityDescription);
+  const [editedName, setEditedName] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
 
   const [backgroundImage, setBackgroundImage] = useState(
     "/images/background_image.png"
   );
   const backgroundInputRef = useRef(null);
 
-  const [joinRequested, setJoinRequested] = useState(false);
+  useEffect(() => {
+    const getCommunity = async () => {
+      try {
+        const res = await axios.get(`${FETCH}communities/${communityId}`, {
+          withCredentials: true,
+        });
 
+        const isAdmin = loggedInUser.user._id === res.data.admin._id;
+
+        const isMember = res.data.members.some(
+          (member) => member._id === loggedInUser.user._id
+        );
+
+        const isSendRequest = res.data.pendingMembers.some(
+          (pendingMember) => pendingMember === loggedInUser.user._id
+        );
+
+        setIsSendRequest(isSendRequest);
+        setIsMember(isMember);
+        setIsAdmin(isAdmin);
+        setCommunity(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCommunity();
+  }, [communityId]);
+
+  const handleUpdateCommunity = async () => {
+    try {
+      const updateCommunity = {
+        name: editedName,
+        description: editedDescription,
+      };
+
+      const res = await axios.put(
+        `${FETCH}communities/${communityId}`,
+        updateCommunity,
+        { withCredentials: true }
+      );
+
+      setCommunity((prev) => ({
+        ...prev,
+        name: res.data.name,
+        description: res.data.description,
+      }));
+
+      setIsCommunityEditOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleJoinRequest = async () => {
+    try {
+      const res = await axios.post(
+        `${FETCH}communities/${communityId}/join`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        setIsSendRequest(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRemoveRequest = async () => {
+    try {
+      const res = await axios.post(
+        `${FETCH}communities/${communityId}/remove-request`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        setIsSendRequest(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLeaveCommunity = async () => {
+    try {
+      const res = await axios.post(
+        `${FETCH}communities/${communityId}/leave`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        setIsMember(false);
+        setCommunity((prev) => ({
+          ...prev,
+          members: prev.members.filter(
+            (member) => member._id !== loggedInUser.user._id
+          ),
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCreatePost = async () => {
+    try {
+      const postData = {
+        content: postContent,
+        image: selectedImage,
+      };
+      const res = await axios.post(
+        `${FETCH}communities/${communityId}/posts`,
+        postData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      setCommunity((prev) => ({
+        ...prev,
+        posts: [res.data, ...(prev.posts || [])],
+      }));
+
+      setIsPostModalOpen(false);
+      setPostContent("");
+      setSelectedImage(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(community);
+
+  console.log("communitymember:", community.members);
+
+  console.log(isAdmin);
+
+  console.log("currentUser:", currentUser);
+
+  console.log("isSendReq:", isSendRequest);
   return (
     <div className={styles.communityContainer}>
       <div className={styles.firstSection}>
         <div className={styles.imgContainer}>
           <img src={backgroundImage} alt="" />
           <div className={styles.communityProfilePhoto}>
-            <img src="/images/pausiber_kitap_topluluğu.png" alt="" />
+            <img src={community.profileImage} alt="profile_image" />
           </div>
           {isAdmin && (
             <div
@@ -82,10 +226,10 @@ const SingleCommunity = ({ userRole = "admin" }) => {
           )}
         </div>
         <div className={styles.infoContainer}>
-          <div className={styles.title}>{communityName}</div>
-          <div className={styles.dec}>{communityDescription}</div>
+          <div className={styles.title}>{community.name}</div>
+          <div className={styles.dec}>{community.description}</div>
           <div className={styles.buttonContainer}>
-            {isGuest && (
+            {!isMember && !isAdmin && (
               <>
                 <div className={styles.messageButton}>
                   <button
@@ -98,14 +242,21 @@ const SingleCommunity = ({ userRole = "admin" }) => {
                 </div>
 
                 <div className={styles.joinButton}>
-                  <button
-                    onClick={() => setJoinRequested((prev) => !prev)}
-                    className={`${styles.button} ${
-                      joinRequested ? styles.requested : ""
-                    }`}
-                  >
-                    {joinRequested ? "İsteği Gönderildi" : "Katıl"}
-                  </button>
+                  {isSendRequest ? (
+                    <button
+                      onClick={handleRemoveRequest}
+                      className={`${styles.button} ${styles.requested}`}
+                    >
+                      İstek Gönderildi
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleJoinRequest}
+                      className={styles.button}
+                    >
+                      Katıl
+                    </button>
+                  )}
                 </div>
               </>
             )}
@@ -115,8 +266,8 @@ const SingleCommunity = ({ userRole = "admin" }) => {
                 <div
                   className={styles.editCommunityInfo}
                   onClick={() => {
-                    setEditedName(communityName);
-                    setEditedDescription(communityDescription);
+                    setEditedName(community.name || "");
+                    setEditedDescription(community.description || "");
                     setIsCommunityEditOpen(true);
                   }}
                 >
@@ -133,7 +284,10 @@ const SingleCommunity = ({ userRole = "admin" }) => {
 
             {isMember && !isAdmin && (
               <div className={styles.memberButtons}>
-                <button className={styles.leaveCommunity}>
+                <button
+                  onClick={handleLeaveCommunity}
+                  className={styles.leaveCommunity}
+                >
                   Topluluktan Ayrıl
                 </button>
               </div>
@@ -158,75 +312,42 @@ const SingleCommunity = ({ userRole = "admin" }) => {
             </div>
           )}
 
-          {/* <div className={styles.noEvent}>Henüz etkinlik paylaşılmadı</div> */}
-          <div className={styles.postCards}>
-            <CommunityPostCard
-              post={{
-                id: 1,
-                content: "Bugün bu kitapları okuyacağız!",
-                image: "/images/postImage.jpg",
-              }}
-              userRole="admin"
-              onEdit={(id, newContent) => {
-                // Backend'den gelen response sonrası local state güncellemesi yapılabilir
-                console.log("Post güncellendi:", id, newContent);
-              }}
-              onDelete={(id) => {
-                // Post silindikten sonra listeden kaldır
-                console.log("Post silindi:", id);
-              }}
-            />
-            <CommunityPostCard
-              post={{
-                id: 1,
-                content: "Bugün bu kitapları okuyacağız!",
-                image: "/images/postImage.jpg",
-              }}
-              userRole="admin"
-              onEdit={(id, newContent) => {
-                // Backend'den gelen response sonrası local state güncellemesi yapılabilir
-                console.log("Post güncellendi:", id, newContent);
-              }}
-              onDelete={(id) => {
-                // Post silindikten sonra listeden kaldır
-                console.log("Post silindi:", id);
-              }}
-            />
-            <CommunityPostCard
-              post={{
-                id: 1,
-                content: "Bugün bu kitapları okuyacağız!",
-                image: "/images/postImage.jpg",
-              }}
-              userRole="admin"
-              onEdit={(id, newContent) => {
-                // Backend'den gelen response sonrası local state güncellemesi yapılabilir
-                console.log("Post güncellendi:", id, newContent);
-              }}
-              onDelete={(id) => {
-                // Post silindikten sonra listeden kaldır
-                console.log("Post silindi:", id);
-              }}
-            />
-          </div>
+          {community.posts ? (
+            <div className={styles.postCards}>
+              {community.posts?.map((post) => (
+                <CommunityPostCard
+                  key={post._id}
+                  community={community}
+                  setCommunity={setCommunity}
+                  post={post}
+                  isAdmin={isAdmin}
+                  isMember={isMember}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.noEvent}>Henüz etkinlik paylaşılmadı</div>
+          )}
         </div>
         <div className={styles.memberContainer}>
           <div className={styles.header}>Üyeler</div>
           <div className={styles.members}>
-            <CommunityMember
-              customStyle={styles.singleMember}
-              onMessageClick={() => setMessageModalOpen(true)}
-              userRole="admin"
-            />
-            <CommunityMember
-              customStyle={styles.singleMember}
-              onMessageClick={() => setMessageModalOpen(true)}
-              userRole="admin"
-            />
-            <CommunityMember
-              onMessageClick={() => setMessageModalOpen(true)}
-              userRole="admin"
-            />
+            {community?.members?.map((member, index) => (
+              <CommunityMember
+                key={member._id}
+                customStyle={
+                  index !== community.members.length - 1
+                    ? styles.singleMember
+                    : ""
+                }
+                onMessageClick={() => setMessageModalOpen(true)}
+                isAdmin={community.admin._id === loggedInUser.user._id}
+                member={member}
+                setMessages={setMessages}
+                setCurrentUser={setCurrentUser}
+                adminId={community.admin._id}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -237,15 +358,15 @@ const SingleCommunity = ({ userRole = "admin" }) => {
             <div className={styles.header}>
               <div className={styles.left}>
                 <div className={styles.image}>
-                  <img src="/images/pausiber_kitap_topluluğu.png" alt="" />
+                  <img src={community.profileImage} alt="" />
                 </div>
-                <span>PaüSiber Kitap Topluluğu</span>
+                <span>{community.name}</span>
               </div>
 
               <div
                 onClick={() => {
                   setIsPostModalOpen(false);
-                  setPostText("");
+                  setPostContent("");
                   setSelectedImage(null);
                 }}
                 className={styles.right}
@@ -267,7 +388,7 @@ const SingleCommunity = ({ userRole = "admin" }) => {
                 placeholder="Ne paylaşmak istersiniz?"
                 minLength={0}
                 maxLength={3000}
-                onChange={(e) => setPostText(e.target.value)}
+                onChange={(e) => setPostContent(e.target.value)}
               ></textarea>
             </div>
 
@@ -298,9 +419,10 @@ const SingleCommunity = ({ userRole = "admin" }) => {
               <div className={styles.shareButton}>
                 <button
                   className={` ${
-                    postText.trim() ? styles.active : styles.disabled
+                    postContent.trim() ? styles.active : styles.disabled
                   }`}
-                  disabled={!postText.trim()}
+                  disabled={!postContent.trim()}
+                  onClick={handleCreatePost}
                 >
                   Paylaş
                 </button>
@@ -315,6 +437,10 @@ const SingleCommunity = ({ userRole = "admin" }) => {
             onClose={() => {
               setMessageModalOpen(false);
             }}
+            messages={messages}
+            setMessages={setMessages}
+            selectedUser={currentUser}
+            currentUser={loggedInUser.user}
           />
         )}
       </div>
@@ -354,11 +480,7 @@ const SingleCommunity = ({ userRole = "admin" }) => {
             <div className={styles.modalActions}>
               <button
                 className={styles.saveButton}
-                onClick={() => {
-                  setCommunityName(editedName);
-                  setCommunityDescription(editedDescription);
-                  setIsCommunityEditOpen(false);
-                }}
+                onClick={handleUpdateCommunity}
               >
                 Kaydet
               </button>
