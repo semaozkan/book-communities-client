@@ -1,47 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./bookCard.module.scss";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeadphonesAlt } from "react-icons/fa";
+import { FaGlasses } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
 
 const BookCard = ({
   book,
-  liked = false,
   showDelete = false,
-  onToggleFavorite,
-  onRemove,
   onClick,
+  favorites,
+  setFavorites,
 }) => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
   const navigate = useNavigate();
+
+  const [isAudioBook, setIsAudioBook] = useState(
+    book.audioBookUrl !== null || book.audioSyncJsonUrl !== null
+  );
+  const [isLiked, setIsLiked] = useState(
+    favorites?.some((fav) => fav._id === book._id)
+  );
+
+  useEffect(() => {
+    setIsLiked(favorites?.some((fav) => fav._id === book._id));
+  }, [favorites, book._id]);
+
+  // console.log("isliked:",isLiked)
 
   const handleCardClick = () => {
     if (onClick) {
       onClick(book); // Eğer dışarıdan onClick fonksiyonu gelmişse onu çalıştır
     } else {
-      navigate(`/book/${book.id}`); // yoksa detay sayfasına git
+      navigate(`/book/${book._id}`); // yoksa detay sayfasına git
     }
   };
 
-  const handleLikeClick = (e) => {
+  const handleLikeClick = async (e) => {
     e.stopPropagation();
-    onToggleFavorite?.(book); // dışarıdan gönderilen like işlevi varsa çalıştır
-  };
-
-  const handleRemoveClick = (e) => {
-    e.stopPropagation();
-    onRemove?.(book); // dışarıdan gönderilen remove işlevi varsa çalıştır
+    try {
+      const res = await axios.post(
+        `${FETCH}auth/favorites`,
+        { bookId: book._id },
+        { withCredentials: true }
+      );
+      console.log("res", res);
+      if (res.status === 200 && Array.isArray(res.data)) {
+        setFavorites(res.data);
+      }
+    } catch (err) {
+      console.error("Favori güncellenirken hata:", err);
+    }
   };
 
   return (
     <div className={styles.card} onClick={handleCardClick}>
       {showDelete && (
         <>
-          <button className={styles.removeButton} onClick={handleRemoveClick}>
+          <button className={styles.removeButton} onClick={handleLikeClick}>
             ✕
           </button>
 
-          <FaHeadphonesAlt className={styles.headphoneIcon} />
+          {isAudioBook && <FaHeadphonesAlt className={styles.headphoneIcon} />}
         </>
       )}
       <div
@@ -61,14 +84,15 @@ const BookCard = ({
       {!showDelete && (
         <div className={styles.iconContainer}>
           <div onClick={handleLikeClick}>
-            {liked ? (
+            {isLiked ? (
               <FaHeart className={styles.heart} />
             ) : (
               <FaRegHeart className={styles.heart} />
             )}
           </div>
           <div>
-            <FaHeadphonesAlt className={styles.headphone} />
+            {isAudioBook && <FaHeadphonesAlt className={styles.headphone} />}
+            <FaGlasses className={styles.book} />
           </div>
         </div>
       )}
