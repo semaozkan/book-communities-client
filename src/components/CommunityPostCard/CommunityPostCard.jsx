@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./communityPostCard.module.scss";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { MdOutlineEdit } from "react-icons/md";
@@ -6,10 +6,18 @@ import { FaTrashAlt } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa6";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
-const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
-  const isMember = userRole === "member" || userRole === "admin";
-  const isAdmin = userRole === "admin";
+const CommunityPostCard = ({
+  post,
+  community,
+  setCommunity,
+  setCommunityPosts,
+  isAdmin,
+}) => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+  const { user: loggedInUser } = useAuth();
 
   const [isModelOpen, setIsModelOpen] = useState(false);
 
@@ -20,65 +28,88 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState(post.content);
 
-  const handleDelete = async () => {
-    const confirmed = window.confirm(
-      "Gönderiyi silmek istediğinize emin misiniz?"
-    );
-    if (!confirmed) return;
+  const [selectedImage, setSelectedImage] = useState(post.image);
+  const [file, setFile] = useState(null);
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+    setSelectedImage(URL.createObjectURL(file));
+  };
+
+  const handleUpdatePost = async () => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
     try {
-      await fetch(`/api/posts/${post.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const response = await axios.post(
+        `${FETCH}image-uploader/upload`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        const { url } = response.data;
+        const res = await axios.put(
+          `${FETCH}posts/${post._id}`,
+          {
+            image: url,
+            content: editedContent,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.status === 200) {
+          setSelectedImage(url);
+          console.log("Gönderi güncellendi:", res.data);
+          setIsEditModalOpen(false);
+          setCommunityPosts((prevPosts) =>
+            prevPosts.map((p) => (p._id === post._id ? res.data : p))
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Gönderi güncellenirken hata oluştu:", error);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    try {
+      const res = await axios.delete(`${FETCH}posts/${post?._id}`, {
+        withCredentials: true,
       });
-      // Post silindikten sonra sayfadan kaldırmak istersen:
-      onDelete(post.id); // parent component'e bildir
+
+      setCommunityPosts((prevPosts) =>
+        prevPosts.filter((p) => p._id !== post._id)
+      );
+
       setIsModelOpen(false);
     } catch (error) {
-      console.error("Silme işlemi başarısız:", error);
+      console.log(error);
     }
   };
 
-  const handleEdit = async () => {
-    try {
-      await fetch(`/api/posts/${post.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ content: editedContent }),
-      });
-
-      onEdit(post.id, editedContent); // varsa
-      setIsEditModalOpen(false);
-    } catch (error) {
-      console.error("Düzenleme başarısız:", error);
-    }
-  };
-
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-    }
-  };
-
-  const [liked, setLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
-  const toggleLike = () => {
-    if (liked) {
-      setLiked(false);
-      setLikeCount((prev) => prev - 1);
-    } else {
-      setLiked(true);
-      setLikeCount((prev) => prev + 1);
+  useEffect(() => {
+    setIsLiked(post?.likes?.includes(loggedInUser?.user?._id));
+    setLikeCount(post?.likes?.length);
+  }, [post]);
+
+  const toggleLike = async () => {
+    const res = await axios.post(
+      `${FETCH}posts/${post._id}/like`,
+      {
+        userId: loggedInUser?.user?._id,
+      },
+      { withCredentials: true }
+    );
+    if (res.status === 200) {
+      setIsLiked(!isLiked);
+      setLikeCount(res.data?.likes?.length);
     }
   };
 
@@ -87,11 +118,11 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
       <div className={styles.header}>
         <div className={styles.left}>
           <div className={styles.image}>
-            <img src="/images/pausiber_kitap_topluluğu.png" alt="" />
+            <img src={community.profileImage} alt="profile_image" />
           </div>
-          <span>PaüSiber Kitap Topluluğu</span>
+          <span>{community.name}</span>
         </div>
-        {isMember && (
+        {isAdmin && (
           <div onClick={handleToggle} className={styles.right}>
             <HiOutlineDotsHorizontal className={styles.dotIcon} />
           </div>
@@ -109,7 +140,7 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
                 <MdOutlineEdit className={styles.editIcon} />
                 Gönderiyi Düzenle
               </li>
-              <li onClick={handleDelete}>
+              <li onClick={handleDeletePost}>
                 <FaTrashAlt />
                 Gönderiyi Sil
               </li>
@@ -118,19 +149,18 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
         )}
       </div>
       <div className={styles.postContent}>
-        <div className={styles.imgContainer}>
-          <img src="../../../public/images/postImage.jpg" alt="" />
-        </div>
-        <div className={styles.text}>
-          Herkese Merhaba, <br /> Arkadaşlarımızla birlikte şöyle bir okuma
-          listesi oluşturduk. Bu listeyi takip ederek kitaplarımızı okumaya
-          devam edeceğiz.
-        </div>
+        {post.image && (
+          <div className={styles.imgContainer}>
+            <img src={post.image} alt="post_image" />
+          </div>
+        )}
+
+        <div className={styles.text}>{post.content}</div>
       </div>
       <div className={styles.postFooter}>
         <div className={styles.likeContainer}>
           <div onClick={toggleLike}>
-            {liked ? (
+            {isLiked ? (
               <FaHeart className={styles.likeIcon} />
             ) : (
               <FaRegHeart className={styles.likeIcon} />
@@ -176,7 +206,7 @@ const CommunityPostCard = ({ userRole = "admin", post, onEdit, onDelete }) => {
             />
 
             <div className={styles.modalActions}>
-              <button onClick={handleEdit}>Kaydet</button>
+              <button onClick={handleUpdatePost}>Kaydet</button>
               <button onClick={() => setIsEditModalOpen(false)}>İptal</button>
             </div>
           </div>
