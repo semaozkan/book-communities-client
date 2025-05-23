@@ -3,10 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Home from "./pages/home/Home";
-import AudioPlayer from "./components/AudioPlayer/AudioPlayer";
-// import BookPage from "./components/BookPage/BookPage";
-import AudioControl from "./components/AudioControl/AudioControl";
 import Navbar from "./components/navbar/Navbar";
+import Loading from "./components/loading/Loading";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Audiobooks from "./pages/audiobooks/Audiobooks";
 import Communities from "./pages/communities/Communities";
 import BookDetail from "./pages/bookDetail/BookDetail";
@@ -15,7 +15,6 @@ import BookDonation from "./pages/bookDonation/BookDonation";
 import SummaryDetail from "./pages/summaryDetail/SummaryDetail";
 import AddSummary from "./pages/addSummary/AddSummary";
 import Favorites from "./pages/favorites/Favorites";
-import AudiobookPlayer from "./pages/audiobookPlayer/AudiobookPlayer";
 import Meet from "./pages/meet/Meet";
 import Footer from "./components/footer/Footer";
 import About from "./pages/about/About";
@@ -25,17 +24,37 @@ import Messages from "./pages/messages/Messages";
 // import { IoSettings } from "react-icons/io5";
 import Settings from "./pages/settings/Settings";
 import DonationTracking from "./pages/donationTracking/DonationTracking";
+import ListenAudioBook from "./pages/ListenAudioBook/ListenAudioBook";
 
-function App() {
+import { useAuth } from "./context/AuthContext";
+import { Navigate, Outlet } from "react-router-dom";
+
+function PrivateRoute() {
+  const { user } = useAuth();
+  return user && user.user ? <Outlet /> : <Navigate to="/login" replace />;
+}
+
+function AppContent() {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => setLoading(false), 800); // min. 800ms loading
+    return () => clearTimeout(timeout);
+  }, [location.pathname]);
+  if (loading) return <Loading />;
   return (
     <>
       <div className="main">
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          {/* Private routes */}
+          <Route element={<PrivateRoute />}>
             <Route path="/audiobooks" element={<Audiobooks />} />
             <Route path="/communities" element={<Communities />} />
             <Route path="/book/:bookId" element={<BookDetail />} />
@@ -57,20 +76,26 @@ function App() {
               element={<AddSummary />}
             />
             <Route path="/favorites" element={<Favorites />} />
-            <Route path="book/listen/:bookId" element={<AudiobookPlayer />} />
-
-            <Route path="/meet/:communityId" element={<Meet />} />
+            <Route path="book/listen/:bookId" element={<ListenAudioBook />} />
+            <Route path="/meet/:meetId" element={<Meet />} />
             <Route path="/about" element={<About />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/notification" element={<Notification />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/settings" element={<Settings />} />
-
-          </Routes>
-          <Footer />
-        </BrowserRouter>
+          </Route>
+        </Routes>
+        {!location.pathname.startsWith("/meet/") && <Footer />}
       </div>
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 
