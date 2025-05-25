@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
 import BookCard from "../../components/bookCard/BookCard";
 import styles from "./favorites.module.scss";
-import { bookData } from "../../data/bookData";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const Favorites = () => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+
+  const { user } = useAuth();
+
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    // Geçici olarak dummyBooksu favori gibi alıyoruz
-    // Normalde backend'den çekicez
-    setFavorites(bookData);
+    const fetchUserFavorites = async () => {
+      try {
+        const res = await axios.get(`${FETCH}auth/${user.user._id}/favorites`, {
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setFavorites(res.data);
+          console.log(" user favorites: ", res.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUserFavorites();
   }, []);
-
-  const removeFromFavorites = (id) => {
-    const updated = favorites.filter((book) => book.id !== id);
-    setFavorites(updated);
-  };
 
   return (
     <div className={styles.favorites}>
@@ -35,10 +46,11 @@ const Favorites = () => {
         {favorites.length > 0 ? (
           favorites.map((item) => (
             <BookCard
-              key={item.id}
+              key={item._id}
               book={item}
               showDelete={true}
-              onRemove={() => removeFromFavorites(item.id)}
+              favorites={favorites}
+              setFavorites={setFavorites}
             />
           ))
         ) : (
