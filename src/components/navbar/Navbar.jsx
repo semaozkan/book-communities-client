@@ -11,11 +11,13 @@ import { IoMdSettings } from "react-icons/io";
 
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { useNotification } from "../../context/NotificationContext";
 
 const Navbar = () => {
   const FETCH = import.meta.env.VITE_FETCH_URL;
 
   const { user, logout } = useAuth();
+  const { unreadCount, setUnreadCount } = useNotification();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalRef = useRef(null);
@@ -45,6 +47,20 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (!user?.user) return;
+    const fetchUnread = async () => {
+      try {
+        const res = await axios.get(`${FETCH}notifications`, {
+          withCredentials: true,
+        });
+        const unread = res.data.filter((n) => !n.isRead).length;
+        setUnreadCount(unread);
+      } catch (err) {}
+    };
+    fetchUnread();
+  }, [user, setUnreadCount]);
 
   return (
     <div className={styles.navbar}>
@@ -84,8 +100,16 @@ const Navbar = () => {
               <a href="/messages">
                 <TiMessages className={styles.messages} />
               </a>
-              <a href="/notification">
+              <a
+                href="/notification"
+                style={{ position: "relative", display: "inline-block" }}
+              >
                 <IoNotifications className={styles.notification} />
+                {unreadCount > 0 && (
+                  <span className={styles.notificationBadge}>
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </a>
               <div
                 className={styles.user}
@@ -96,8 +120,25 @@ const Navbar = () => {
                 <li>
                   <BsThreeDots className={styles.dots} />
                 </li>
-                <li>
-                  <FaUserCircle className={styles.circle} />
+                <li
+                  style={{
+                    cursor: "pointer",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    src={user?.user?.profilePicture}
+                    alt=""
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
                 </li>
               </div>
             </div>
@@ -107,7 +148,7 @@ const Navbar = () => {
             <div className={styles.modal} ref={modalRef}>
               <div className={styles.modalItem} ref={buttonRef}>
                 <MdOutlineAccountBox className={styles.accountIcon} />
-                <a href="/profile">Hesabım</a>
+                <a href={`/profile/${user.user._id}`}>Hesabım</a>
               </div>
 
               <div className={styles.modalItem} ref={buttonRef}>

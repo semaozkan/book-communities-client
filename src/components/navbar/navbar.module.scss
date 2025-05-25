@@ -150,3 +150,24 @@
     }
   }
 }
+
+.notificationBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background-color: var(--templateColor, red); /* fallback renk */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  border-radius: 9999px;
+  padding: 3px 7px;
+  min-width: 18px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px white;
+  z-index: 1;
+}
