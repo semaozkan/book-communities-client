@@ -1,8 +1,12 @@
 import { useState } from "react";
 import styles from "./settings.module.scss";
 import { FaUserLarge } from "react-icons/fa6";
+import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 const Settings = () => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+  const { user, login } = useAuth();
   const [activeTab, setActiveTab] = useState("personal");
 
   const [isActiveName, setIsActiveName] = useState(false);
@@ -10,12 +14,19 @@ const Settings = () => {
   const [isActiveMail, setIsActiveMail] = useState(false);
   const [isActivePhone, setIsActivePhone] = useState(false);
   const [isActivePassword, setIsActivePassword] = useState(false);
+  const [showResponseMessage, setShowResponseMessage] = useState(false);
+  const [responseText, setResponseText] = useState({
+    text: "",
+    color: "",
+    status: "",
+  });
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordAgain, setNewPasswordAgain] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
@@ -60,6 +71,86 @@ const Settings = () => {
     }
   };
 
+  const handleSubmitName = async () => {
+    try {
+      const response = await axios.put(
+        `${FETCH}auth/profile`,
+        {
+          fullname: `${name} ${surname}`,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setShowResponseMessage(true);
+      setResponseText({
+        text: "Adınız ve soyadınız başarıyla güncellendi.",
+        color: "green",
+        status: "success",
+      });
+      setTimeout(() => {
+        setShowResponseMessage(false);
+        setIsActiveName(false);
+      }, 5000);
+
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        login({ user: updatedUser });
+      }
+    } catch (error) {
+      console.error("Error updating name:", error);
+      setShowResponseMessage(true);
+      setResponseText({
+        text: error.response.data.message,
+        color: "red",
+        status: "error",
+      });
+      setTimeout(() => {
+        setShowResponseMessage(false);
+      }, 5000);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    try {
+      const response = await axios.put(
+        `${FETCH}auth/change-password`,
+        {
+          currentPassword: oldPassword,
+          newPassword: newPassword,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setShowResponseMessage(true);
+      setResponseText({
+        text: response.data.message,
+        color: "green",
+        status: "success",
+      });
+      setTimeout(() => {
+        setShowResponseMessage(false);
+        setIsActivePassword(false);
+      }, 5000);
+
+      if (response.status === 200) {
+        console.log("update pass:", response.data);
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      setShowResponseMessage(true);
+      setResponseText({
+        text: error.response.data.message,
+        color: "red",
+        status: "error",
+      });
+      setTimeout(() => {
+        setShowResponseMessage(false);
+      }, 5000);
+    }
+  };
+
   return (
     <div className={styles.settings}>
       <div className={styles.sideBar}>
@@ -75,7 +166,7 @@ const Settings = () => {
             <span>Kişisel Bilgiler</span>
           </div>
 
-          <div
+          {/* <div
             className={`${styles.item} ${
               activeTab === "favorites" ? styles.active : ""
             }`}
@@ -83,7 +174,7 @@ const Settings = () => {
           >
             <FaUserLarge />
             <span>Favoriler</span>
-          </div>
+          </div>*/}
         </div>
       </div>
       <div className={styles.mainContainer}>
@@ -126,15 +217,22 @@ const Settings = () => {
                         />
                       </div>
                     </div>
+                    {showResponseMessage && (
+                      <div
+                        style={{ color: responseText.color, marginBottom: 24 }}
+                      >
+                        {responseText.text}
+                      </div>
+                    )}
                     <div
                       className={styles.saveButton}
-                      //   onClick={handleSubmitName}
+                      onClick={handleSubmitName}
                     >
                       Kaydedin
                     </div>
                   </div>
                 ) : (
-                  <span className={styles.content}>Semanur Özkan</span>
+                  <span className={styles.content}>{user.user?.fullname}</span>
                 )}
               </div>
 
@@ -144,9 +242,8 @@ const Settings = () => {
                   <button
                     className={styles.editButton}
                     onClick={handleVisibleUsername}
-                  >
-                    {isActiveUsername ? `İptal Et` : `Düzenle`}
-                  </button>
+                    disabled={true}
+                  ></button>
                 </div>
 
                 {isActiveUsername ? (
@@ -172,19 +269,18 @@ const Settings = () => {
                     </div>
                   </div>
                 ) : (
-                  <span className={styles.content}>semanurozkan5</span>
+                  <span className={styles.content}>{user.user?.username}</span>
                 )}
               </div>
 
               <div className={styles.infoContainer}>
                 <div className={styles.info}>
-                  <span>Eposta</span>
+                  <span>E-posta</span>
                   <button
                     className={styles.editButton}
                     onClick={handleVisibleMail}
-                  >
-                    {isActiveMail ? `İptal Et` : `Düzenle`}
-                  </button>
+                    disabled={true}
+                  ></button>
                 </div>
 
                 {isActiveMail ? (
@@ -210,13 +306,11 @@ const Settings = () => {
                     </div>
                   </div>
                 ) : (
-                  <span className={styles.content}>
-                    semanurozkan5@gmail.com
-                  </span>
+                  <span className={styles.content}>{user.user?.email}</span>
                 )}
               </div>
 
-              <div className={styles.infoContainer}>
+              {/*<div className={styles.infoContainer}>
                 <div className={styles.info}>
                   <span>Telefon Numarası</span>
                   <button
@@ -252,7 +346,7 @@ const Settings = () => {
                 ) : (
                   <span className={styles.content}>53465251</span>
                 )}
-              </div>
+              </div>*/}
 
               <div
                 className={`${styles.infoContainer} ${styles.passwordContainer}`}
@@ -274,6 +368,16 @@ const Settings = () => {
                     </div>
                     <div className={styles.inputContainer}>
                       <div>
+                        <div>Eski Parola</div>
+                        <div className={styles.inputContent}>
+                          <input
+                            type="text"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div>
                         <div>Yeni Parola</div>
                         <div className={styles.inputContent}>
                           <input
@@ -282,13 +386,11 @@ const Settings = () => {
                             onChange={(e) => {
                               const value = e.target.value;
                               setNewPassword(value);
-                              setPasswordsMatch(value === newPassword);
-                              console.log(newPassword);
+                              setPasswordsMatch(value === newPasswordAgain);
                             }}
                           />
                         </div>
                       </div>
-
                       <div>
                         <div>Parolayı Onaylayın</div>
                         <div className={styles.inputContent}>
@@ -298,17 +400,47 @@ const Settings = () => {
                             onChange={(e) => {
                               const value = e.target.value;
                               setNewPasswordAgain(value);
-                              setPasswordsMatch(value === newPassword);
-                              console.log(newPasswordAgain);
+                              setPasswordsMatch(newPassword === value);
                             }}
                           />
                         </div>
+                        {newPasswordAgain && !passwordsMatch && (
+                          <div
+                            className={styles.errorMsg}
+                            style={{ color: "red", marginTop: 8 }}
+                          >
+                            Parolalar eşleşmiyor!
+                          </div>
+                        )}
                       </div>
                     </div>
+                    {showResponseMessage && (
+                      <div
+                        style={{ color: responseText.color, marginBottom: 24 }}
+                      >
+                        {responseText.text}
+                      </div>
+                    )}
                     <div
                       className={`${styles.saveButton} ${styles.password}`}
-                      disabled={!passwordsMatch}
-                      //   onClick={handleSubmitPassword}
+                      disabled={
+                        !passwordsMatch ||
+                        !oldPassword ||
+                        !newPassword ||
+                        !newPasswordAgain
+                      }
+                      onClick={
+                        passwordsMatch ? handleUpdatePassword : undefined
+                      }
+                      style={{
+                        cursor:
+                          passwordsMatch &&
+                          oldPassword &&
+                          newPassword &&
+                          newPasswordAgain
+                            ? "pointer"
+                            : "not-allowed",
+                      }}
                     >
                       Parolayı Güncelleyin
                     </div>
