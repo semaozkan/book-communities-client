@@ -8,6 +8,7 @@
 
   .detailContent {
     max-width: 1000px;
+    width: 100%;
     margin: 40px;
     padding: 24px;
     background-color: white;
@@ -19,6 +20,7 @@
       flex-direction: column;
       align-items: center;
       margin-bottom: 24px;
+      text-transform: capitalize;
 
       h1 {
         font-size: 28px;
