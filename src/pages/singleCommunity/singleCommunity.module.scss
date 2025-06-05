@@ -153,9 +153,9 @@
         }
 
         .meetButton {
-          position: absolute;
-          top: 30px;
-          right: 16px;
+          // position: absolute;
+          // top: 30px;
+          // right: 16px;
 
           button {
             min-width: max-content;
@@ -240,7 +240,7 @@
         align-items: center;
         font-size: 16px;
         color: #888;
-        padding: 12px 0;
+        padding: 12px 0;
         margin: 30px 0;
       }
 
@@ -501,4 +501,162 @@
       }
     }
   }
+}
+.joinMeetButtonContainer {
+  margin-right: 24px;
+
+  .joinMeetButton {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 24px;
+    color: rgb(47, 211, 52);
+    background: rgb(240, 255, 240);
+    border: 1.5px solid rgb(47, 211, 52);
+    cursor: pointer;
+  }
+}
+
+.tabBar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 36px;
+  margin-top: 42px;
+  background: #fcf9ff;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 1px 2px 0 rgb(140 140 140/0.04);
+  overflow: hidden;
+  border: 1px solid #ece6fa;
+}
+
+.tabBar button {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #5a5563;
+  padding: 22px 32px 16px 32px;
+  border-radius: 0;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.18s;
+  background: none;
+  box-shadow: none;
+}
+
+.tabBar button:not(:last-child) {
+  border-right: 1px solid #ece6fa;
+}
+
+.tabBar button.activeTab::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+  background: var(--templateColor, #ff6600);
+}
+
+.tabBar button.activeTab {
+  color: var(--templateColor, #ff6600);
+  font-weight: 700;
+}
+
+.tabBar button:hover:not(.activeTab)::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+  background: #ffe0cc;
+}
+
+.requestCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px 0 rgb(140 140 140/0.08);
+  padding: 18px 28px;
+  margin-bottom: 18px;
+  transition: box-shadow 0.18s;
+  border: 1px solid #f2f2f2;
+}
+.requestCard:hover {
+  box-shadow: 0 4px 16px 0 rgb(140 140 140/0.16);
+}
+.requestUserInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.requestProfileImg {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f4f2ee;
+  box-shadow: 0 1px 4px 0 rgb(140 140 140/0.1);
+}
+.requestFullname {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 2px;
+}
+.requestUsername {
+  font-size: 15px;
+  color: #888;
+}
+.requestActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.acceptBtn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.acceptBtn:hover {
+  background: #388e3c;
+}
+.rejectBtn {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.rejectBtn:hover {
+  background: #b71c1c;
+}
+
+.noRequest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  color: #888;
+  padding: 12px 0;
+  margin: 30px 0;
 }

@@ -15,6 +15,7 @@ import { useAuth } from "../../context/AuthContext";
 const SingleCommunity = () => {
   const FETCH = import.meta.env.VITE_FETCH_URL;
   const { user: loggedInUser } = useAuth();
+  console.log("dışarda user", loggedInUser.user);
 
   const navigate = useNavigate();
   const { communityId } = useParams();
@@ -22,8 +23,10 @@ const SingleCommunity = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMember, setIsMember] = useState(false);
   const [isSendRequest, setIsSendRequest] = useState(false);
+  const [activeMeeting, setActiveMeeting] = useState(false);
 
   const [community, setCommunity] = useState({});
+  const [communityPosts, setCommunityPosts] = useState([]);
 
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postContent, setPostContent] = useState("");
@@ -45,6 +48,8 @@ const SingleCommunity = () => {
   );
   const backgroundInputRef = useRef(null);
 
+  const [activeTab, setActiveTab] = useState("posts");
+
   useEffect(() => {
     const getCommunity = async () => {
       try {
@@ -59,13 +64,18 @@ const SingleCommunity = () => {
         );
 
         const isSendRequest = res.data.pendingMembers.some(
-          (pendingMember) => pendingMember === loggedInUser.user._id
+          (pendingMember) => pendingMember._id === loggedInUser.user._id
         );
+
+        const activeMeeting = res.data.activeMeeting;
+        const activePosts = res.data.posts.filter((p) => p.isActive);
 
         setIsSendRequest(isSendRequest);
         setIsMember(isMember);
         setIsAdmin(isAdmin);
         setCommunity(res.data);
+        setActiveMeeting(activeMeeting);
+        setCommunityPosts(activePosts);
       } catch (error) {
         console.log(error);
       }
@@ -172,10 +182,7 @@ const SingleCommunity = () => {
         }
       );
 
-      setCommunity((prev) => ({
-        ...prev,
-        posts: [res.data, ...(prev.posts || [])],
-      }));
+      setCommunityPosts((prevPosts) => [res.data, ...(prevPosts || [])]);
 
       setIsPostModalOpen(false);
       setPostContent("");
@@ -185,20 +192,132 @@ const SingleCommunity = () => {
     }
   };
 
+  const handleStartMeeting = async () => {
+    try {
+      const res = await axios.post(
+        `${FETCH}meetings/start`,
+        {
+          communityId: communityId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.status === 201) {
+        navigate(`/meet/${res.data._id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleNavigateToMeet = async () => {
+    try {
+      const res = await axios.post(
+        `${FETCH}meetings/${activeMeeting}/join`,
+        {},
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        navigate(`/meet/${res.data._id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Accept request
+  const handleAcceptRequest = async (userId) => {
+    try {
+      const res = await axios.post(
+        `${FETCH}communities/${communityId}/accept`,
+        { userId },
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        setCommunity((prev) => ({
+          ...prev,
+          pendingMembers: prev.pendingMembers.filter(
+            (member) => member._id !== userId
+          ),
+          members: [
+            ...prev.members,
+            prev.pendingMembers.find((member) => member._id === userId),
+          ],
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   console.log(community);
 
-  console.log("communitymember:", community.members);
+  // Reject request
+  const handleRejectRequest = async (userId) => {
+    try {
+      const res = await axios.post(
+        `${FETCH}communities/${communityId}/reject-request`,
+        { userId },
+        { withCredentials: true }
+      );
 
-  console.log(isAdmin);
+      if (res.status === 200) {
+        setCommunity((prev) => ({
+          ...prev,
+          pendingMembers: prev.pendingMembers.filter(
+            (member) => member._id !== userId
+          ),
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  console.log("currentUser:", currentUser);
+  const handleUpdateBg = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
 
-  console.log("isSendReq:", isSendRequest);
+    try {
+      const response = await axios.post(
+        `${FETCH}image-uploader/upload`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        const { url } = response.data;
+        const res = await axios.put(
+          `${FETCH}communities/${communityId}/images`,
+          {
+            coverImage: url,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.status === 200) {
+          setBackgroundImage(url);
+          console.log("Arkaplan fotoğrafı güncellendi:", response.data);
+          const updatedCommunity = res.data;
+          setCommunity(updatedCommunity);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className={styles.communityContainer}>
       <div className={styles.firstSection}>
         <div className={styles.imgContainer}>
-          <img src={backgroundImage} alt="" />
+          <img src={community.coverImage} alt="" />
           <div className={styles.communityProfilePhoto}>
             <img src={community.profileImage} alt="profile_image" />
           </div>
@@ -214,13 +333,7 @@ const SingleCommunity = () => {
                 accept="image/*"
                 style={{ display: "none" }}
                 ref={backgroundInputRef}
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    const imageUrl = URL.createObjectURL(file);
-                    setBackgroundImage(imageUrl);
-                  }
-                }}
+                onChange={handleUpdateBg}
               />
             </div>
           )}
@@ -231,7 +344,10 @@ const SingleCommunity = () => {
           <div className={styles.buttonContainer}>
             {!isMember && !isAdmin && (
               <>
-                <div className={styles.messageButton}>
+                <div
+                  className={styles.messageButton}
+                  style={{ display: "none" }}
+                >
                   <button
                     onClick={() => {
                       setMessageModalOpen(true);
@@ -254,11 +370,22 @@ const SingleCommunity = () => {
                       onClick={handleJoinRequest}
                       className={styles.button}
                     >
-                      Katıl
+                      Topluluğa Katıl
                     </button>
                   )}
                 </div>
               </>
+            )}
+
+            {activeMeeting && isMember && (
+              <div className={styles.joinMeetButtonContainer}>
+                <button
+                  className={styles.joinMeetButton}
+                  onClick={handleNavigateToMeet}
+                >
+                  Toplantıya Katıl
+                </button>
+              </div>
             )}
 
             {isAdmin && (
@@ -275,9 +402,7 @@ const SingleCommunity = () => {
                 </div>
 
                 <div className={styles.meetButton}>
-                  <button onClick={() => navigate(`/meet/${communityId}`)}>
-                    Toplantı Başlat
-                  </button>
+                  <button onClick={handleStartMeeting}>Toplantı Başlat</button>
                 </div>
               </div>
             )}
@@ -298,35 +423,149 @@ const SingleCommunity = () => {
 
       <div className={styles.mainContainer}>
         <div className={styles.eventContainer}>
-          <div className={styles.header}>Tüm Gönderiler</div>
-          {isAdmin && (
-            <div className={styles.newPost}>
-              <LuPlus className={styles.plusIcon} />
+          {isAdmin ? (
+            <>
+              {/* Tab bar */}
               <div
-                onClick={() => {
-                  setIsPostModalOpen(true);
+                className={styles.tabBar}
+                style={{
+                  display: "flex",
+                  gap: 0,
+                  marginBottom: 36,
+                  marginTop: 42,
                 }}
               >
-                Gönderi Oluşturun
+                <button
+                  className={activeTab === "posts" ? styles.activeTab : ""}
+                  onClick={() => setActiveTab("posts")}
+                >
+                  Gönderiler
+                </button>
+                <button
+                  className={activeTab === "requests" ? styles.activeTab : ""}
+                  onClick={() => setActiveTab("requests")}
+                >
+                  İstekler
+                </button>
               </div>
-            </div>
-          )}
 
-          {community.posts ? (
-            <div className={styles.postCards}>
-              {community.posts?.map((post) => (
-                <CommunityPostCard
-                  key={post._id}
-                  community={community}
-                  setCommunity={setCommunity}
-                  post={post}
-                  isAdmin={isAdmin}
-                  isMember={isMember}
-                />
-              ))}
-            </div>
+              {/* Tab content */}
+              {activeTab === "posts" && (
+                <>
+                  <div className={styles.newPost}>
+                    <LuPlus className={styles.plusIcon} />
+                    <div
+                      onClick={() => {
+                        setIsPostModalOpen(true);
+                      }}
+                    >
+                      Gönderi Oluşturun
+                    </div>
+                  </div>
+                  {communityPosts && communityPosts.length > 0 ? (
+                    <div className={styles.postCards}>
+                      {communityPosts?.map((post) => (
+                        <CommunityPostCard
+                          key={post._id}
+                          community={community}
+                          setCommunity={setCommunity}
+                          setCommunityPosts={setCommunityPosts}
+                          post={post}
+                          isAdmin={isAdmin}
+                          isMember={isMember}
+                          user={loggedInUser}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.noEvent}>
+                      Henüz Etkinlik Paylaşılmadı
+                    </div>
+                  )}
+                </>
+              )}
+              {activeTab === "requests" && (
+                <div className={styles.requestsTab}>
+                  {community.pendingMembers &&
+                  community.pendingMembers.length > 0 ? (
+                    <ul style={{ padding: 0, listStyle: "none", margin: 0 }}>
+                      {community.pendingMembers.map((member) => (
+                        <li key={member._id} className={styles.requestCard}>
+                          <div
+                            className={styles.requestUserInfo}
+                            onClick={() => navigate(`/profile/${member._id}`)}
+                            style={{
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 14,
+                            }}
+                          >
+                            <img
+                              src={
+                                member.profilePicture ||
+                                "/images/profile_photo.jpg"
+                              }
+                              alt={member.fullname}
+                              className={styles.requestProfileImg}
+                            />
+                            <div>
+                              <div className={styles.requestFullname}>
+                                {member.fullname}
+                              </div>
+                              <div className={styles.requestUsername}>
+                                @{member.username}
+                              </div>
+                            </div>
+                          </div>
+                          <div className={styles.requestActions}>
+                            <button
+                              onClick={() => handleAcceptRequest(member._id)}
+                              className={styles.acceptBtn}
+                            >
+                              Kabul Et
+                            </button>
+                            <button
+                              onClick={() => handleRejectRequest(member._id)}
+                              className={styles.rejectBtn}
+                            >
+                              Reddet
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className={styles.noRequest}>
+                      Aktif bir katılım isteği yoktur.
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           ) : (
-            <div className={styles.noEvent}>Henüz etkinlik paylaşılmadı</div>
+            <>
+              {/* Sadece gönderiler, tab bar yok */}
+              {communityPosts && communityPosts.length > 0 ? (
+                <div className={styles.postCards}>
+                  {communityPosts?.map((post) => (
+                    <CommunityPostCard
+                      key={post._id}
+                      community={community}
+                      setCommunity={setCommunity}
+                      setCommunityPosts={setCommunityPosts}
+                      post={post}
+                      isAdmin={isAdmin}
+                      isMember={isMember}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.noEvent}>
+                  Henüz Etkinlik Paylaşılmadı
+                </div>
+              )}
+            </>
           )}
         </div>
         <div className={styles.memberContainer}>
@@ -346,6 +585,8 @@ const SingleCommunity = () => {
                 setMessages={setMessages}
                 setCurrentUser={setCurrentUser}
                 adminId={community.admin._id}
+                communityId={communityId}
+                setCommunity={setCommunity}
               />
             ))}
           </div>
