@@ -1,20 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookCard from "../../components/bookCard/BookCard";
 import styles from "./audiobooks.module.scss";
-import { bookData } from "../../data/bookData";
 import Search from "../../components/search/Search";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const Audiobooks = () => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+  const { user } = useAuth();
+
+  const [books, setBooks] = useState([]);
+
   const [favorites, setFavorites] = useState([]);
 
-  const toggleFavorite = (bookId) => {
-    setFavorites(
-      (prevFavorites) =>
-        prevFavorites.includes(bookId)
-          ? prevFavorites.filter((id) => id !== bookId) // zaten varsa çıkar
-          : [...prevFavorites, bookId] // yoksa ekle
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await axios.get(`${FETCH}books`, { withCredentials: true });
+        setBooks(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const fetchUserFavorites = async () => {
+      try {
+        const res = await axios.get(`${FETCH}auth/${user.user._id}/favorites`, {
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setFavorites(res.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBooks();
+    fetchUserFavorites();
+  }, []);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredBooks = books.filter((book) => {
+    if (!searchTerm.trim()) return true;
+    const q = searchTerm.toLowerCase();
+    return (
+      (book.title && book.title.toLowerCase().includes(q)) ||
+      (book.author && book.author.toLowerCase().includes(q)) ||
+      (book.description && book.description.toLowerCase().includes(q))
     );
-  };
+  });
+
   return (
     <div className={styles.audiobooks}>
       <div className={styles.imgContainer}>
@@ -30,15 +65,25 @@ const Audiobooks = () => {
       </div>
 
       <div className={styles.searchContainer}>
-        <Search />
+        <Search
+          simple={true}
+          dropdown={false}
+          placeholder="Kitap adı, yazar veya açıklama ile ara"
+          onChange={setSearchTerm}
+        />
       </div>
-      <div className={styles.booksContainer}>
-        {bookData.map((item) => (
+
+      {/* Sesli Kitaplar Bölümü */}
+      <div
+        className={styles.booksRow}
+        style={{ marginTop: "48px", marginBottom: "48px" }}
+      >
+        {filteredBooks.map((item, i) => (
           <BookCard
-            key={item.id}
+            key={i}
             book={item}
-            liked={favorites.includes(item.id)}
-            onToggleFavorite={() => toggleFavorite(item.id)}
+            favorites={favorites}
+            setFavorites={setFavorites}
           />
         ))}
       </div>
