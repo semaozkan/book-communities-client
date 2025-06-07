@@ -1,11 +1,21 @@
 import { useState } from "react";
 import styles from "./messagePreviewCard.module.scss";
 
+function timeAgo(date) {
+  const now = new Date();
+  const diff = Math.floor((now - new Date(date)) / 1000);
+  if (diff < 60) return `${diff} sn önce`;
+  if (diff < 3600) return `${Math.floor(diff / 60)} dk önce`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} saat önce`;
+  return `${Math.floor(diff / 86400)} gün önce`;
+}
+
 const MessagePreviewCard = ({
   isActive,
   onClick,
   user,
   lastMessage,
+  time,
   currentUserId,
 }) => {
   return (
@@ -29,7 +39,13 @@ const MessagePreviewCard = ({
               }`
             : ""}
         </div>
-        <div className={styles.time}>9 saat</div>
+        <div className={styles.time}>
+          {time
+            ? timeAgo(time)
+            : lastMessage?.time
+            ? timeAgo(lastMessage.time)
+            : ""}
+        </div>
       </div>
     </div>
   );
