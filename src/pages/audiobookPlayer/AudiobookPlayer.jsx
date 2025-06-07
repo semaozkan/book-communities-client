@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import styles from "./audiobookPlayer.module.scss";
 
 const AUDIO_SRC = "/kucuk_prens.mp4";
@@ -13,16 +14,30 @@ function splitTranscriptToPages(transcript, pageSize = PAGE_SIZE) {
   return pages;
 }
 
-const AudiobookPlayer = ({ compact = false, pageSize = PAGE_SIZE }) => {
+const AudiobookPlayer = ({
+  book,
+  meet,
+  compact = false,
+  pageSize = PAGE_SIZE,
+  singlePageStyle,
+}) => {
   const [pages, setPages] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState("");
   const audioRef = useRef(null);
+  const socketRef = useRef(null);
+  const isRemoteAction = useRef(false);
+
+  const [transcriptSrc, setTranscriptSrc] = useState(book?.audioSyncJsonUrl);
+  const [audioSrc, setAudioSrc] = useState(book?.audioBookUrl);
+  const [isWaitingToSync, setIsWaitingToSync] = useState(false); // ✅ EKLENDİ
 
   // Transcript yükle
   useEffect(() => {
-    fetch(TRANSCRIPT_SRC)
+    if (!book?.audioSyncJsonUrl) return;
+    fetch(book.audioSyncJsonUrl)
       .then((res) => {
         if (!res.ok) throw new Error("Transcript dosyası bulunamadı!");
         return res.json();
@@ -33,14 +48,85 @@ const AudiobookPlayer = ({ compact = false, pageSize = PAGE_SIZE }) => {
       })
       .catch((err) => {
         setPages([]);
-        setError(
-          "Metin yüklenemedi veya bulunamadı. Lütfen kucuk_prens.json dosyasını public klasörüne ekleyin ve formatını kontrol edin."
-        );
+        setError("Metin yüklenemedi veya bulunamadı.");
         console.error("Transcript yüklenemedi:", err);
       });
-  }, []);
+  }, [book?.audioSyncJsonUrl, pageSize]);
 
-  // Audio zamanı takip et
+  // SOCKET.IO ile real-time kontrol
+  useEffect(() => {
+    if (!meet?._id) return;
+    socketRef.current = io(import.meta.env.VITE_SOCKET_CLIENT_URL);
+    socketRef.current.emit("joinRoom", meet._id);
+
+    // Sadece yeni gelen kullanıcıya uygulanır, emit yapılmaz!
+    socketRef.current.on("initialAudioState", ({ isPlaying, currentTime }) => {
+      if (audioRef.current) {
+        audioRef.current.currentTime = currentTime;
+        setCurrentTime(currentTime);
+        setIsPlaying(isPlaying);
+        // Eğer başka biri oynatıyorsa, buton gözüksün
+        setIsWaitingToSync(isPlaying);
+        // Otomatik play çağırma!
+      }
+    });
+
+    // Diğer tüm kullanıcılar için
+    socketRef.current.on("audio-state", ({ isPlaying, currentTime }) => {
+      setIsPlaying(isPlaying);
+      setCurrentTime(currentTime);
+      if (audioRef.current) {
+        if (Math.abs(audioRef.current.currentTime - currentTime) > 0.5) {
+          audioRef.current.currentTime = currentTime;
+        }
+        if (isPlaying) {
+          audioRef.current.play().catch((e) => {
+            console.warn("Play blocked (audio-state)", e);
+          });
+        } else {
+          if (!audioRef.current.paused) {
+            audioRef.current.pause();
+          }
+        }
+      }
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [meet?._id]);
+
+  // Audio eventlerini emit et
+  const emitAudioControl = (isPlay) => {
+    if (socketRef.current && meet?._id && audioRef.current) {
+      isRemoteAction.current = true; // bizim tetikleyicimiz olduğunu söyle
+      socketRef.current.emit("audio-control", {
+        roomId: meet._id,
+        isPlaying: isPlay,
+        currentTime: audioRef.current.currentTime,
+      });
+
+      // 100ms sonra sıfırla
+      setTimeout(() => {
+        isRemoteAction.current = false;
+      }, 100);
+    }
+  };
+
+  const handlePlay = () => {
+    if (!isRemoteAction.current) emitAudioControl(true);
+  };
+  const handlePause = () => {
+    if (!isRemoteAction.current) emitAudioControl(false);
+  };
+  const handleSeek = () => {
+    if (!isRemoteAction.current) emitAudioControl(isPlaying);
+  };
+
+  // Audio zamanını manuel olarak değiştirme (slider vs.) durumunda da tetiklenmeli
+  // Eğer farklı bir seek event'in varsa, burada da emitAudioControl çağırabilirsin.
+
+  // Audio zamanı takip et ve metin sayfasını güncelle
   useEffect(() => {
     const findPageForTime = (time) => {
       for (let i = 0; i < pages.length; i++) {
@@ -49,30 +135,18 @@ const AudiobookPlayer = ({ compact = false, pageSize = PAGE_SIZE }) => {
           return i;
         }
       }
-      return currentPage; // Eğer uygun sayfa bulunamazsa mevcut sayfada kal
+      return currentPage;
     };
-
     const interval = setInterval(() => {
       if (audioRef.current) {
         const newTime = audioRef.current.currentTime;
         setCurrentTime(newTime);
-
-        // Mevcut zamana göre doğru sayfayı bul
         const correctPage = findPageForTime(newTime);
+        // Sadece gerçekten farklı bir sayfadaysak güncelle
         if (correctPage !== currentPage) {
           setCurrentPage(correctPage);
         }
-
-        // Eğer mevcut sayfanın son segmentinin bitiş zamanına ulaşıldıysa
-        const currentPageSegments = pages[currentPage] || [];
-        const lastSegment = currentPageSegments[currentPageSegments.length - 1];
-
-        if (lastSegment && newTime >= lastSegment.end) {
-          // Sonraki sayfaya geç
-          if (currentPage < pages.length - 1) {
-            setCurrentPage((prev) => prev + 1);
-          }
-        }
+        // Otomatik page ilerletmede audio'yu ileriye sarmıyoruz!
       }
     }, 500);
     return () => clearInterval(interval);
@@ -84,19 +158,32 @@ const AudiobookPlayer = ({ compact = false, pageSize = PAGE_SIZE }) => {
     (seg) => currentTime >= seg.start && currentTime < seg.end
   );
 
-  const goNext = () => setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
-  const goPrev = () => setCurrentPage((p) => Math.max(p - 1, 0));
-
-  // Sayfa değişince audio'yu o sayfanın başına sar (isteğe bağlı)
-  useEffect(() => {
-    if (pages.length > 0 && audioRef.current) {
-      const firstSeg = pages[currentPage]?.[0];
-      if (firstSeg) {
+  // Sayfa değişiminde audio'yu otomatik olarak sarmıyoruz.
+  // Sadece kullanıcı "ileri" veya "geri" butonuna bastığında audio'yu sar ve emit et.
+  const goNext = () => {
+    setCurrentPage((p) => {
+      const next = Math.min(p + 1, pages.length - 1);
+      const firstSeg = pages[next]?.[0];
+      if (firstSeg && audioRef.current) {
         audioRef.current.currentTime = firstSeg.start;
+        emitAudioControl(isPlaying); // Sadece kullanıcı aksiyonunda emit
       }
-    }
-    // eslint-disable-next-line
-  }, [currentPage]);
+      return next;
+    });
+  };
+  const goPrev = () => {
+    setCurrentPage((p) => {
+      const prev = Math.max(p - 1, 0);
+      const firstSeg = pages[prev]?.[0];
+      if (firstSeg && audioRef.current) {
+        audioRef.current.currentTime = firstSeg.start;
+        emitAudioControl(isPlaying); // Sadece kullanıcı aksiyonunda emit
+      }
+      return prev;
+    });
+  };
+
+  // useEffect ile otomatik sarmayı kaldırdık!
 
   return (
     <div
@@ -110,26 +197,26 @@ const AudiobookPlayer = ({ compact = false, pageSize = PAGE_SIZE }) => {
         <div className={styles.bookInfosContainer}>
           <div className={styles.bookInfos}>
             <div className={styles.bookImg}>
-              <img src="/images/kucuk_prens.jpeg" alt="" />
+              <img src={book?.img} alt="" />
             </div>
             <ul className={styles.bookDetails}>
               <li className={styles.bookName}>
-                <strong>Kitap Adı:</strong> Küçük Prens
+                <strong>Kitap Adı:</strong> {book?.title}
               </li>
               <li className={styles.author}>
-                <strong>Yazar:</strong> Antoine de Saint-Exupéry
+                <strong>Yazar:</strong> {book?.author}
               </li>
               <li className={styles.time}>
-                <strong>Süre:</strong> 1sa 30dk
+                <strong>Süre:</strong> {book?.time}
               </li>
               <li className={styles.category}>
-                <strong>Kategori:</strong> Çocuk
+                <strong>Kategori:</strong> {book?.category}
               </li>
               <li className={styles.voicedBy}>
-                <strong>Seslendiren:</strong> Mirgün Cabas
+                <strong>Çeviren:</strong> {book?.translatedBy}
               </li>
               <li className={styles.language}>
-                <strong>Dil:</strong> Türkçe
+                <strong>Dil:</strong> {book?.language}
               </li>
             </ul>
           </div>
@@ -184,8 +271,43 @@ const AudiobookPlayer = ({ compact = false, pageSize = PAGE_SIZE }) => {
           <div className={styles.otherInfos}></div>
         </div>
       </div>
-      <div className={styles.audioContainer}>
-        <audio ref={audioRef} controls src={AUDIO_SRC}></audio>
+      <div
+        className={styles.audioContainer}
+        style={singlePageStyle ? { marginLeft: "340px" } : {}}
+      >
+        <audio
+          ref={audioRef}
+          controls
+          src={book?.audioBookUrl || ""}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          onSeeked={handleSeek}
+        />
+        {isWaitingToSync && (
+          <div className={styles.syncNotice}>
+            <button
+              onClick={() => {
+                setIsWaitingToSync(false);
+                // O anki odadaki state'e göre zaman ve oynatma durumunu senkronla
+                if (audioRef.current) {
+                  audioRef.current.currentTime = currentTime; // Oda state'ine çek
+                  isRemoteAction.current = true;
+                  const playPromise = audioRef.current.play();
+                  if (playPromise !== undefined) {
+                    playPromise.catch((err) =>
+                      console.warn("Autoplay blocked", err)
+                    );
+                  }
+                  setTimeout(() => {
+                    isRemoteAction.current = false;
+                  }, 500);
+                }
+              }}
+            >
+              Dinlemeye Katıl
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
