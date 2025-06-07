@@ -5,11 +5,7 @@ const SummaryCard = ({ summary }) => {
   const navigate = useNavigate();
   return (
     <div className={styles.card}>
-      <img
-        src={summary.image || "/images/summary_default.jpg"}
-        alt="özet"
-        className={styles.image}
-      />
+      <img src={summary?.bookImage} alt="özet" className={styles.image} />
       <div className={styles.info}>
         <div className={styles.title}>{summary.title}</div>
         {summary?.desc && <div className={styles.desc}>{summary?.desc}</div>}
