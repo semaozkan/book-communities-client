@@ -1,0 +1,70 @@
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  &:hover {
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.14);
+    transform: translateY(-2px) scale(1.01);
+  }
+}
+.cover {
+  width: 64px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #f3f3f3;
+}
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+.author {
+  color: #b06b33;
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  margin: 2px 0 4px 0;
+}
+.audio {
+  color: #ff7e3c;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.category {
+  background: #f3e9e1;
+  color: #b06b33;
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.88rem;
+}
+.desc {
+  color: #444;
+  font-size: 0.93rem;
+  margin-top: 3px;
+  line-height: 1.4;
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
