@@ -1,45 +1,74 @@
 .search {
-  .searchBar {
-    width: 500px;
-    padding: 12px 24px;
-    display: flex;
-    // justify-content: space-between;
-    border: 1px solid var(--templateColor);
-    border-radius: 10px;
-    // background-color: var(--templateColorHover);
-    background-color: #fdf6ec;
-    // #EFF9FF
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  z-index: 10;
+}
 
-    &:hover {
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    }
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--templateColor);
+  border-radius: 10px;
+  background-color: #fdf6ec;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  padding: 6px 10px;
+  position: relative;
+}
 
-    input {
-      flex: 1;
-      margin-right: 10px;
-      border: none;
-      outline: none;
-      background-color: transparent;
-      //   color: white;
-      font-size: 16px;
+.searchBar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1.07rem;
+  flex: 1;
+  padding: 7px 2px;
+}
 
-      &::placeholder {
-        color: #999;
-      }
-    }
-
-    button {
-      padding: 6px 24px;
-      border-radius: 5px;
-      border: none;
-      color: white;
-      background-color: #ff511cc4;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #e04817;
-      }
-    }
+.searchBar button {
+  background: #ff7e3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.18s;
+  font-weight: 500;
+  &:hover {
+    background: #e96d22;
   }
+}
+
+.resultsBox {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.16);
+  z-index: 30;
+  padding: 10px 8px 6px 8px;
+  margin-top: 2px;
+  max-height: 350px;
+  overflow-y: auto;
+  min-width: 320px;
+}
+
+.info {
+  color: #888;
+  font-size: 1.03rem;
+  padding: 18px 0 12px 0;
+  text-align: center;
+}
+
+.error {
+  color: #c62828;
+  font-size: 1.02rem;
+  padding: 16px 0 10px 0;
+  text-align: center;
+  font-weight: 500;
 }
