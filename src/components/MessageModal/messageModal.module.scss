@@ -1,5 +1,5 @@
 .messageModal {
-  width: 500px;
+  width: 100%;
   background-color: white;
   box-shadow: 0px 0px 0px 1px rgb(140 140 140/0.2), 0px 4px 4px rgb(0 0 0/0.3);
   border-radius: 8px 8px 0 0;
@@ -53,6 +53,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+
       .closeIcon {
         width: 20px;
         height: 20px;
@@ -62,7 +63,7 @@
 
   .messageSection {
     height: 450px;
-    padding: 20px 8px 0 8px;
+    padding: 20px 8px 10px 8px;
 
     overflow-y: auto;
     border-bottom: 2px solid rgb(140 140 140/0.2);
@@ -129,7 +130,70 @@
           margin-top: 4px;
           padding-right: 24px;
         }
+
+        .attachedFile {
+          margin-top: 8px;
+
+          .previewImage {
+            width: 120px;
+            height: auto;
+            border-radius: 6px;
+            object-fit: cover;
+          }
+
+          .fileBox {
+            font-size: 14px;
+            background-color: #f0f0f0;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            color: #333;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
       }
+    }
+  }
+
+  .filePreview {
+    background: #f4f4f4;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .previewContent {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .previewImage {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      .previewIcon {
+        font-size: 30px;
+      }
+
+      .fileInfo {
+        font-size: 14px;
+        color: #333;
+      }
+    }
+
+    .removeFileBtn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
     }
   }
 
@@ -154,6 +218,7 @@
   }
 
   .footer {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -177,6 +242,13 @@
 
         &:hover {
           background-color: rgb(140 140 140/0.1);
+        }
+
+        .emojiPickerWrapper {
+          position: absolute;
+          bottom: 60px;
+          left: 12px;
+          z-index: 10;
         }
       }
     }
@@ -202,6 +274,20 @@
           background-color: #e8e8e8;
         }
       }
+    }
+  }
+}
+
+.customStyle {
+  border-radius: 0 !important;
+  animation: none !important;
+  border-inline-start: 1px solid rgb(140 140 140/0.4);
+  box-shadow: none;
+  transition: none !important;
+
+  .header {
+    .close {
+      display: none;
     }
   }
 }
