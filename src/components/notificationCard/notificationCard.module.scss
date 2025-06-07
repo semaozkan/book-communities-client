@@ -24,6 +24,8 @@
 
     .messageContent {
       font-size: 16px;
+      word-break: break-word;
+      max-width: 350px;
 
       p {
         display: -webkit-box;
