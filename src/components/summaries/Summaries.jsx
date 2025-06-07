@@ -3,7 +3,7 @@ import styles from "./summaries.module.scss";
 import SummaryCard from "../summaryCard/SummaryCard";
 import { useNavigate, useParams } from "react-router-dom";
 
-const Summaries = ({ summaries }) => {
+const Summaries = ({ summaries, onDelete }) => {
   const navigate = useNavigate();
   const { bookId } = useParams();
 
@@ -20,9 +20,22 @@ const Summaries = ({ summaries }) => {
         </div>
 
         <div className={styles.summaryCardContainer}>
-          {summaries.map((summary, index) => (
-            <SummaryCard key={index} summary={summary} />
-          ))}
+          {summaries.length === 0 ? (
+            <div className={styles.emptyState}>
+              <img
+                src="/images/empty-summary.svg"
+                alt="Özet yok"
+                className={styles.emptyImg}
+              />
+              <div className={styles.emptyText}>
+                Henüz hiç özet eklenmemiş. İlk özeti sen ekle!
+              </div>
+            </div>
+          ) : (
+            summaries.map((summary, index) => (
+              <SummaryCard key={index} summary={summary} onDelete={onDelete} />
+            ))
+          )}
         </div>
       </div>
     </div>
