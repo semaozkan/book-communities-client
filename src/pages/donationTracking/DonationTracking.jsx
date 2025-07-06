@@ -1,44 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./donationTracking.module.scss";
 import { IoEllipsisHorizontal } from "react-icons/io5";
-
-const dummyBook = {
-  image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200",
-  title: "Suç ve Ceza",
-  author: "Fyodor Dostoyevski",
-};
-const donor = {
-  name: "Semanur Özkan",
-  image: "https://randomuser.me/api/portraits/women/44.jpg",
-};
-const applicants = [
-  {
-    id: 1,
-    name: "Ali Yılmaz",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: 2,
-    name: "Ayşe Demir",
-    image: "https://randomuser.me/api/portraits/women/65.jpg",
-  },
-  {
-    id: 3,
-    name: "Mehmet Kaya",
-    image: "https://randomuser.me/api/portraits/men/41.jpg",
-  },
-];
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function DonationTracking() {
-  const [status, setStatus] = useState("pending");
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+  const navigate = useNavigate();
+  const { donationId } = useParams();
+  const { user: loggedInUser } = useAuth();
+
+  const [donation, setDonation] = useState(null);
+  const [isDonor, setIsDonor] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [status, setStatus] = useState(null);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmApplicant, setConfirmApplicant] = useState(null);
+  const [selectedRequesterForMessages, setSelectedRequesterForMessages] =
+    useState(null);
+
   const statusMap = {
     pending: { label: "Beklemede", color: "#ffb300", bg: "#fff8e1" },
     completed: { label: "Tamamlandı", color: "#388e3c", bg: "#e8f5e9" },
     cancelled: { label: "İptal Edildi", color: "#d32f2f", bg: "#fff0f0" },
   };
-  const [selectedApplicant, setSelectedApplicant] = useState(applicants[0]);
+
   const [messages, setMessages] = useState([
     { from: "me", text: "Merhaba, kitabı ne zaman göndereceksiniz?" },
     { from: "other", text: "Hafta sonu kargoya vereceğim." },
@@ -54,15 +43,48 @@ export default function DonationTracking() {
     { from: "other", text: "Hafta sonu kargoya vereceğim." },
   ]);
   const [input, setInput] = useState("");
-  const [applicantStatus, setApplicantStatus] = useState({
-    1: "pending",
-    2: "pending",
-    3: "pending",
-  });
 
-  const handleSelectApplicant = (id) => {
-    setConfirmApplicant(applicants.find((a) => a.id === id));
+  useEffect(() => {
+    const res = axios
+      .get(`${FETCH}donations/${donationId}`, { withCredentials: true })
+      .then((res) => {
+        setDonation(res.data);
+      });
+  }, []);
+
+  const handleSelectRequester = (id) => {
+    console.log(" accept id:", id);
+    setConfirmApplicant(donation?.requesters.find((a) => a.user._id === id));
     setModalOpen(true);
+  };
+
+  const handleAcceptDonation = (id) => {
+    try {
+      const res = axios.put(
+        `${FETCH}donations/${donationId}/complete`,
+        { selectedRequesterId: id },
+        { withCredentials: true }
+      );
+      setStatus("completed");
+      setModalOpen(false);
+      setConfirmApplicant(null);
+    } catch (error) {
+      console.log("handleAcceptDonation error:", error);
+    }
+  };
+
+  const handleCancelDonation = () => {
+    try {
+      const res = axios.put(
+        `${FETCH}donations/${donationId}/cancel`,
+        {},
+        { withCredentials: true }
+      );
+      setStatus("cancelled");
+      setDonation((prev) => ({ ...prev, status: "cancelled" }));
+    } catch (error) {
+      console.log("handleCancelDonation error:", error);
+    }
   };
 
   const handleSend = () => {
@@ -72,76 +94,97 @@ export default function DonationTracking() {
     }
   };
 
+  const handleNavigateToProfile = (id) => {
+    navigate(`/profile/${id}`);
+    setSelectedRequesterForMessages(a); // after that, we'll use that.
+  };
+
+  useEffect(() => {
+    setIsDonor(donation?.donor._id === loggedInUser.user._id);
+    setWinner(donation?.requesters.find((a) => a.status === "accepted"));
+    setStatus(donation?.status);
+  }, [donation]);
+
   return (
     <div className={styles.trackingContainer}>
       <div className={styles.body}>
         <div className={styles.left}>
           <div className={styles.applicantsSection}>
             <div className={styles.sectionTitle}>Talep Edenler</div>
-            <ul className={styles.applicantList}>
-              {applicants.map((a) => (
-                <li
-                  key={a.id}
-                  className={
-                    selectedApplicant.id === a.id
-                      ? styles.selectedApplicant
-                      : ""
-                  }
-                  onClick={() => setSelectedApplicant(a)}
-                >
-                  <img
-                    src={a.image}
-                    alt={a.name}
-                    className={styles.applicantImage}
-                  />
-                  <span>{a.name}</span>
-                  <button
-                    className={styles.selectBtn}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectApplicant(a.id);
-                    }}
-                    disabled={applicantStatus[a.id] === "accepted"}
+            {donation?.requesters.length > 0 ? (
+              <ul className={styles.applicantList}>
+                {donation?.requesters.map((a) => (
+                  <li
+                    key={a.user._id}
+                    onClick={() => handleNavigateToProfile(a.user._id)}
                     style={{
-                      display: status === "completed" ? "none" : "inline-flex",
+                      backgroundColor:
+                        winner?.user._id === a.user._id
+                          ? "#e8f5e9"
+                          : "transparent",
                     }}
                   >
-                    {applicantStatus[a.id] === "accepted" ? "Seçildi" : "Seç"}
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    <img
+                      src={a.user.profilePicture}
+                      alt={a.user.fullname}
+                      className={styles.applicantImage}
+                    />
+                    <span>{a.user.fullname}</span>
+                    {donation.status === "pending" &&
+                      donation?.donor._id === loggedInUser.user._id && (
+                        <button
+                          className={styles.selectBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectRequester(a.user._id);
+                          }}
+                        >
+                          Seç
+                        </button>
+                      )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className={styles.noApplicants}>Henüz talep eden yok.</div>
+            )}
           </div>
         </div>
         <div className={styles.right}>
           <div className={styles.header}>
             <img
-              src={dummyBook.image}
+              src={donation?.book?.image}
               alt="kitap"
               className={styles.bookImage}
             />
             <div className={styles.bookInfo}>
-              <div className={styles.bookTitle}>{dummyBook.title}</div>
-              <div className={styles.bookAuthor}>{dummyBook.author}</div>
+              <div className={styles.bookTitle}>{donation?.book?.title}</div>
+              <div className={styles.bookAuthor}>{donation?.book?.author}</div>
             </div>
-            <div className={styles.donorInfo}>
+            <div
+              className={styles.donorInfo}
+              onClick={() => handleNavigateToProfile(donation?.donor._id)}
+              style={{ cursor: "pointer" }}
+            >
               <img
-                src={donor.image}
+                src={donation?.donor?.profilePicture}
                 alt="donor"
                 className={styles.donorImage}
               />
-              <div className={styles.donorName}>{donor.name}</div>
+              <div className={styles.donorName}>
+                {donation?.donor?.fullname}
+              </div>
             </div>
             <div
               className={styles.statusLabel}
               style={{
-                color: statusMap[status].color,
-                background: statusMap[status].bg,
-                border: `1.5px solid ${statusMap[status].color}`,
+                color: statusMap[status]?.color,
+                background: statusMap[status]?.bg,
+                border: `1.5px solid ${statusMap[status]?.color}`,
               }}
             >
-              {statusMap[status].label}
-              {status === "pending" && (
+              {statusMap[status]?.label}
+              {donation?.status === "pending" && isDonor && (
                 <button
                   className={styles.settingsBtn}
                   onClick={() => setModalOpen(true)}
@@ -166,8 +209,8 @@ export default function DonationTracking() {
                   <div
                     style={{ fontWeight: 600, fontSize: 18, marginBottom: 18 }}
                   >
-                    {confirmApplicant.name}'ı seçmek istediğinizden emin
-                    misiniz?
+                    {confirmApplicant.user.fullname}'ı seçmek istediğinizden
+                    emin misiniz?
                   </div>
                   <div
                     style={{
@@ -180,14 +223,7 @@ export default function DonationTracking() {
                       className={styles.modalActionBtn}
                       style={{ background: "#388e3c" }}
                       onClick={() => {
-                        const newStatus = {};
-                        applicants.forEach((a) => {
-                          newStatus[a.id] =
-                            a.id === confirmApplicant.id
-                              ? "completed"
-                              : "pending";
-                        });
-                        setApplicantStatus(newStatus);
+                        handleAcceptDonation(confirmApplicant.user._id);
                         setStatus("completed");
                         setModalOpen(false);
                         setConfirmApplicant(null);
@@ -227,6 +263,7 @@ export default function DonationTracking() {
                     onClick={() => {
                       setStatus("cancelled");
                       setModalOpen(false);
+                      handleCancelDonation();
                     }}
                   >
                     Bağışı İptal Et
@@ -237,7 +274,7 @@ export default function DonationTracking() {
           </div>
           <div className={styles.messageSection}>
             <div className={styles.sectionTitle}>
-              {selectedApplicant.name} ile Mesajlaşma
+              {selectedRequesterForMessages?.user?.fullname} ile Mesajlaşma
             </div>
             <div className={styles.messages}>
               {messages.map((msg, i) => (
