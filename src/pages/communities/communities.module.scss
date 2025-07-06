@@ -6,7 +6,8 @@
 
   .imgContainer {
     width: 100%;
-    height: calc(65vh - 80px);
+    // height: calc(65vh - 80px);
+    height: calc(65vh - 250px);
     position: relative;
     overflow: hidden;
     margin-bottom: 100px;
@@ -15,7 +16,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center -300px;
+      object-position: center -400px;
     }
 
     svg {
@@ -37,7 +38,7 @@
 
   .addButton {
     position: absolute;
-    top: 530px;
+    top: 340px;
     right: 130px;
     font-weight: 500;
     border: 2px solid var(--templateColor);
@@ -56,6 +57,10 @@
     //   width: 100%;
     //   height: 100%;
     // }
+  }
+
+  .searchContainer {
+    width: 100%;
   }
 
   .communityContainer {
