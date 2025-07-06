@@ -1,15 +1,34 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import DonationCard from "../../components/donationCard/DonationCard";
 import styles from "./bookDonation.module.scss";
 import { IoClose } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import Search from "../../components/search/Search";
+import axios from "axios";
 
 const BookDonation = () => {
+  const FETCH = import.meta.env.VITE_FETCH_URL;
+
+  const [donations, setDonations] = useState([]);
+
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef();
+
+  const [bookName, setBookName] = useState("");
+  const [autor, setAutor] = useState("");
+  const [file, setFile] = useState(null);
+
+  const isFormValid =
+    selectedImage && bookName.trim() !== "" && autor.trim() !== "";
+
+  useEffect(() => {
+    axios.get(`${FETCH}donations`, { withCredentials: true }).then((res) => {
+      setDonations(res.data);
+    });
+  }, []);
 
   const handleBookClick = () => {
     if (fileInputRef.current) {
@@ -19,16 +38,67 @@ const BookDonation = () => {
 
   const handleBookChange = (e) => {
     const file = e.target.files[0];
+    setFile(file);
     if (file) {
       setSelectedImage(URL.createObjectURL(file));
     }
   };
 
-  const [bookName, setBookName] = useState("");
-  const [autor, setAutor] = useState("");
+  const handleDonationSubmit = async () => {
+    if (!isFormValid || !file) return;
+    const donationData = {
+      book: {
+        title: bookName,
+        author: autor,
+        image: selectedImage,
+      },
+    };
 
-  const isFormValid =
-    selectedImage && bookName.trim() !== "" && autor.trim() !== "";
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const imageRes = await axios.post(
+        `${FETCH}image-uploader/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (imageRes.status === 200) {
+        const { url } = imageRes.data;
+        donationData.book.image = url;
+
+        const res = await axios.post(`${FETCH}donations`, donationData, {
+          withCredentials: true,
+        });
+
+        // Yeni donation'u mevcut listeye ekle
+        setDonations((prev) => [res.data, ...prev]);
+
+        setIsDonationModalOpen(false);
+        setSelectedImage(null);
+      }
+    } catch (error) {
+      console.error("Error submitting donation:", error);
+    }
+  };
+
+  const filteredDonations = donations.filter((donation) => {
+    if (!searchTerm.trim()) return true;
+    const q = searchTerm.toLowerCase();
+    return (
+      (donation.book.title && donation.book.title.toLowerCase().includes(q)) ||
+      (donation.book.author &&
+        donation.book.author.toLowerCase().includes(q)) ||
+      (donation.book.description &&
+        donation.book.description.toLowerCase().includes(q))
+    );
+  });
 
   return (
     <div className={styles.bookDonation}>
@@ -53,53 +123,28 @@ const BookDonation = () => {
         + Bağış Yap{" "}
       </div>
 
-      <div className={styles.searchContainer}>
-        <Search />
+      <div className={styles.searchContainer} style={{ width: "500px" }}>
+        <Search
+          simple={true}
+          dropdown={false}
+          placeholder="Kitap adı veya yazar ile ara"
+          onChange={setSearchTerm}
+        />
       </div>
 
       <div className={styles.mainContainer}>
         <div className={styles.donationBooks}>
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
-
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
-
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
-
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
-
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
-
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
-
-          <DonationCard
-            onModalOpen={() => {
-              setIsModalOpen(true);
-            }}
-          />
+          {filteredDonations
+            .filter((donation) => donation.status !== "cancelled")
+            .map((donation) => (
+              <DonationCard
+                key={donation._id}
+                donation={donation}
+                onModalOpen={() => {
+                  setIsModalOpen(true);
+                }}
+              />
+            ))}
         </div>
       </div>
       {isDonationModalOpen && (
@@ -175,10 +220,7 @@ const BookDonation = () => {
 
             <div className={styles.footer}>
               <button
-                onClick={() => {
-                  setIsDonationModalOpen(false);
-                  setSelectedImage(null);
-                }}
+                onClick={handleDonationSubmit}
                 className={isFormValid ? styles.active : styles.disabled}
                 disabled={!isFormValid}
               >
